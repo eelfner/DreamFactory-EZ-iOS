@@ -10,6 +10,8 @@ import UIKit
 
 class SignInViewController: UIViewController {
 
+    private var bFirstShowingOfView:Bool = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,7 +19,7 @@ class SignInViewController: UIViewController {
     }
 
     override func viewDidAppear(animated: Bool) {
-        if API.sharedInstance.isSignedIn {
+        if bFirstShowingOfView && API.sharedInstance.isSignedIn {
             performSegueWithIdentifier("ContactsSegue", sender: self)
         }
     }
@@ -26,6 +28,10 @@ class SignInViewController: UIViewController {
         API.sharedInstance.signInWithEmail("user1@zcage.com", password: "password") { (result) in
             if result.bIsSuccess {
                 print("SignIn Success")
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.bFirstShowingOfView = false
+                    self.performSegueWithIdentifier("ContactsSegue", sender: self)
+                }
             }
             else {
                 print("SignIn Error: \(result.error)")

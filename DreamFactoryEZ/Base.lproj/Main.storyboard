@@ -37,8 +37,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vub-mg-oca">
-                                <rect key="frame" x="30" y="79" width="240" height="154"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vub-mg-oca">
+                                <rect key="frame" x="30" y="80" width="240" height="154"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIo-I3-I4J">
                                         <rect key="frame" x="4" y="8" width="46" height="21"/>
@@ -76,10 +76,18 @@
                                         <state key="normal" title="Register"/>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="A3g-d3-qyJ"/>
+                                    <constraint firstAttribute="height" constant="154" id="B7V-CO-wV4"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Vub-mg-oca" firstAttribute="top" secondItem="Pr1-lu-T3V" secondAttribute="bottom" constant="16" id="Set-mh-voe"/>
+                            <constraint firstItem="Vub-mg-oca" firstAttribute="centerX" secondItem="EnM-ja-S6K" secondAttribute="centerX" id="YYN-Kp-1IX"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Dream Factory" id="hDd-RW-TzS"/>
                     <connections>
@@ -93,7 +101,7 @@
         <!--Contacts-->
         <scene sceneID="M0Y-oj-8xK">
             <objects>
-                <tableViewController id="MzZ-CJ-FLk" customClass="MainViewController" customModule="DreamFactoryEZ" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="MzZ-CJ-FLk" customClass="ContactsViewController" customModule="DreamFactoryEZ" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="rIq-BE-1i2">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

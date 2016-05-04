@@ -19,30 +19,38 @@ class ContactsViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self, action: #selector(settingsSelected))
-        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
-        
-        // Notifications
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(newContactNames), name: kNotificationContactNames, object: nil)
     }
+    
     override func viewWillAppear(animated: Bool) {
-        //API.sharedInstance.getContactNames()
+        API.sharedInstance.getContacts(nil) { (restResult) in
+            if restResult.bIsSuccess {
+                //print("Result \(restResult.json)")
+                var newNames = [String]()
+                if let contactsArray = restResult.json?["resource"] as? JSONArray {
+                    for contact in contactsArray {
+                        if let fName = contact["first_name"], let lName = contact["last_name"] {
+                            let name = "\(lName), \(fName)"
+                            newNames.append(name)
+                            newNames.sortInPlace()
+                        }
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.names = newNames
+                    self.tableView.reloadData()
+                }
+                
+            }
+            else {
+                print("Error \(restResult.error)")
+            }
+            
+        }
     }
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    @objc func settingsSelected() {
-        
-    }
-    @objc func newContactNames(notification:NSNotification) {
-        if let newNames = notification.object as? [String] {
-            names = newNames
-            tableView.reloadData()
-        }
-    }
-    
-
     // MARK: UITableViewDataSource
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return names.count
