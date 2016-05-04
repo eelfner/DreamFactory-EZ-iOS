@@ -8,11 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		B63E30621CD91FD900842E68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30611CD91FD900842E68 /* AppDelegate.swift */; };
-		B63E30641CD91FD900842E68 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30631CD91FD900842E68 /* ViewController.swift */; };
 		B63E30671CD91FDA00842E68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63E30651CD91FDA00842E68 /* Main.storyboard */; };
 		B63E30691CD91FDA00842E68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B63E30681CD91FDA00842E68 /* Assets.xcassets */; };
 		B63E306C1CD91FDA00842E68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */; };
 		B63E30771CD91FDA00842E68 /* DreamFactoryEZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */; };
+		B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */; };
+		B6BE3C1D1CDA661E00B15BEB /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */; };
+		B6BE3C201CDA665C00B15BEB /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1F1CDA665C00B15BEB /* API.swift */; };
+		B6BE3C271CDA66A500B15BEB /* ContactDetailRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C241CDA66A500B15BEB /* ContactDetailRecord.swift */; };
+		B6BE3C281CDA66A500B15BEB /* ContactRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C251CDA66A500B15BEB /* ContactRecord.swift */; };
+		B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C261CDA66A500B15BEB /* GroupRecord.swift */; };
+		B6BE3C2B1CDA686B00B15BEB /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C2A1CDA686B00B15BEB /* JSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +34,6 @@
 /* Begin PBXFileReference section */
 		B63E305E1CD91FD900842E68 /* DreamFactoryEZ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DreamFactoryEZ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B63E30611CD91FD900842E68 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B63E30631CD91FD900842E68 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B63E30661CD91FDA00842E68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B63E30681CD91FDA00842E68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B63E306B1CD91FDA00842E68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,6 +41,13 @@
 		B63E30721CD91FDA00842E68 /* DreamFactoryEZTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DreamFactoryEZTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamFactoryEZTests.swift; sourceTree = "<group>"; };
 		B63E30781CD91FDA00842E68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
+		B6BE3C1F1CDA665C00B15BEB /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		B6BE3C241CDA66A500B15BEB /* ContactDetailRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactDetailRecord.swift; sourceTree = "<group>"; };
+		B6BE3C251CDA66A500B15BEB /* ContactRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactRecord.swift; sourceTree = "<group>"; };
+		B6BE3C261CDA66A500B15BEB /* GroupRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupRecord.swift; sourceTree = "<group>"; };
+		B6BE3C2A1CDA686B00B15BEB /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +89,10 @@
 		B63E30601CD91FD900842E68 /* DreamFactoryEZ */ = {
 			isa = PBXGroup;
 			children = (
+				B6BE3C231CDA66A500B15BEB /* Model */,
+				B6BE3C1E1CDA663600B15BEB /* API */,
+				B6BE3C191CDA65E200B15BEB /* ViewControllers */,
 				B63E30611CD91FD900842E68 /* AppDelegate.swift */,
-				B63E30631CD91FD900842E68 /* ViewController.swift */,
 				B63E30651CD91FDA00842E68 /* Main.storyboard */,
 				B63E30681CD91FDA00842E68 /* Assets.xcassets */,
 				B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */,
@@ -94,6 +108,34 @@
 				B63E30781CD91FDA00842E68 /* Info.plist */,
 			);
 			path = DreamFactoryEZTests;
+			sourceTree = "<group>";
+		};
+		B6BE3C191CDA65E200B15BEB /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */,
+				B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		B6BE3C1E1CDA663600B15BEB /* API */ = {
+			isa = PBXGroup;
+			children = (
+				B6BE3C1F1CDA665C00B15BEB /* API.swift */,
+				B6BE3C2A1CDA686B00B15BEB /* JSON.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		B6BE3C231CDA66A500B15BEB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B6BE3C241CDA66A500B15BEB /* ContactDetailRecord.swift */,
+				B6BE3C251CDA66A500B15BEB /* ContactRecord.swift */,
+				B6BE3C261CDA66A500B15BEB /* GroupRecord.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,8 +239,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B63E30641CD91FD900842E68 /* ViewController.swift in Sources */,
+				B6BE3C1D1CDA661E00B15BEB /* ContactsViewController.swift in Sources */,
 				B63E30621CD91FD900842E68 /* AppDelegate.swift in Sources */,
+				B6BE3C201CDA665C00B15BEB /* API.swift in Sources */,
+				B6BE3C271CDA66A500B15BEB /* ContactDetailRecord.swift in Sources */,
+				B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */,
+				B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */,
+				B6BE3C281CDA66A500B15BEB /* ContactRecord.swift in Sources */,
+				B6BE3C2B1CDA686B00B15BEB /* JSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +438,7 @@
 				B63E307D1CD91FDA00842E68 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B63E307E1CD91FDA00842E68 /* Build configuration list for PBXNativeTarget "DreamFactoryEZTests" */ = {
 			isa = XCConfigurationList;
@@ -398,6 +447,7 @@
 				B63E30801CD91FDA00842E68 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
