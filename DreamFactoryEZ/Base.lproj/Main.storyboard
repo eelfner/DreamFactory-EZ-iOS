@@ -51,6 +51,9 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <state key="normal" title="Register"/>
+                                        <connections>
+                                            <action selector="registrationAction" destination="Tvu-kV-Vo5" eventType="touchUpInside" id="2dy-du-cS1"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tvw-jW-OUk">
                                         <rect key="frame" x="71" y="85" width="120" height="36"/>

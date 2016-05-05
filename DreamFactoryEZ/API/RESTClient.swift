@@ -14,7 +14,7 @@ import Foundation
 
 let kRESTServerActiveCountUpdated = "kRESTServerActiveCountUpdated"
 
-typealias SignInHandler = (Bool)->Void
+typealias SuccessHandler = (Bool)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
 enum RestCallResult {
@@ -44,6 +44,7 @@ enum RestCallResult {
 enum HTTPMethod: String { case GET, POST, PUT, DELETE }
 
 class RESTClient {
+    private let kRestRegister = "/user/register"
     private let kRestSignIn = "/user/session"
     private let baseInstanceUrl: String
     private let apiKey: String
@@ -61,7 +62,18 @@ class RESTClient {
         sessionToken = nil
     }
     
-    func signInWithEmail(email:String, password:String, signInHandler: SignInHandler) {
+    func registerWithEmail(email:String, password:String, registrationSuccessHandler: SuccessHandler) {
+        let requestData = ["email" : email, "password" : password]
+        
+        callRestService(kRestRegister, method: .POST, queryParams: nil, body: requestData) { (callResult) in
+            if callResult.bIsSuccess {
+                self.signInWithEmail(email, password: password, signInHandler: registrationSuccessHandler)
+            }
+            registrationSuccessHandler(false)
+        }
+    }
+    
+    func signInWithEmail(email:String, password:String, signInHandler: SuccessHandler) {
         let requestData = ["email" : email, "password" : password]
         
         callRestService(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in

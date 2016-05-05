@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignInViewController: UIViewController, SignInDelegate {
+class SignInViewController: UIViewController, SignInDelegate, RegistrationDelegate {
 
     @IBOutlet weak var signInView: UIView!
     @IBOutlet weak var emailTextField: UITextField!
@@ -69,6 +69,42 @@ class SignInViewController: UIViewController, SignInDelegate {
         }
     }
 
+    @IBAction func registrationAction() {
+        let alert = UIAlertController(title: "Registration", message: "Who are you?", preferredStyle: .Alert)
+        alert.addTextFieldWithConfigurationHandler { (textField) in
+            textField.placeholder = "Email"
+            textField.keyboardType = .EmailAddress
+        }
+        alert.addTextFieldWithConfigurationHandler { (textField) in
+            textField.placeholder = "Password"
+            textField.secureTextEntry = true
+        }
+        let regAction = UIAlertAction(title: "Register", style: .Default) { (_) in
+            let email = (alert.textFields![0] as UITextField).text ?? ""
+            let pwd = (alert.textFields![1] as UITextField).text ?? ""
+            
+            self.registerEmail(email, pwd: pwd)
+        }
+        alert.addAction(regAction)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+        
+    }
+    func registerEmail(email:String, pwd:String) {
+        dataAccess.registerWithEmail(email, password: pwd, registrationDelegate: self)
+    }
+    // MARK: - RegisterDelegate
+    func userIsRegisteredSuccess(bSuccess:Bool) {
+        if bSuccess {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+        else {
+            let alert = UIAlertController(title: nil, message: "Registration Failed", preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+            presentViewController(alert, animated: true, completion: nil)
+            updateViewForSignedInState(false)
+        }
+    }
     @IBAction func signInAction() {
         if dataAccess.isSignedIn() {
             dataAccess.signOut(self)
@@ -79,6 +115,7 @@ class SignInViewController: UIViewController, SignInDelegate {
             dataAccess.signInWithEmail(email, password: pwd, signInDelegate: self)
         }
     }
+    
     
     // MARK: - SignInDelegate
     func userIsSignedInSuccess(bSignedIn: Bool) {
