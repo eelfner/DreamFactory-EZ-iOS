@@ -1,25 +1,20 @@
 //
-//  API.swift
+//  RESTClient
 //  DreamFactoryEZ
 //
 //  Created by Eric Elfner on 2016-05-03.
 //  Copyright © 2016 Eric Elfner. All rights reserved.
 //
+// This class is a basic REST client configure for access DreamFactory servers.
+// It handles signon, session token, and network traffic. No domain specific knowledge.
+// REST call results (success and failure) are represented by RestCallResult enum which
+// is used in the RestResultClosure to simplify the callback interface.
 
-import UIKit
+import Foundation
 
-let kNotificationContactNames = "kNotificationContactNames"
+let kRESTServerActiveCountUpdated = "kRESTServerActiveCountUpdated"
 
-private let names = ["George", "Jamal", "Sally"]
-
-private let kBaseInstanceUrl = "https://df-ft-eric-elfner.enterprise.dreamfactory.com/api/v2"
-private let kRestGetNames = kBaseInstanceUrl + "/db/_table/contact?fields=first_name%2C%20last_name"
-private let kRestSignIn = kBaseInstanceUrl + "/user/session"
-
-private let kApiKey = "e71ef61795613a90bd8c03f0a742bfd67365262fec4f3fec8961beee40f7d1ed"
-
-private var restActiveCallCount = 0
-
+typealias SignInHandler = (Bool)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
 enum RestCallResult {
@@ -48,66 +43,43 @@ enum RestCallResult {
 
 enum HTTPMethod: String { case GET, POST, PUT, DELETE }
 
-class API {
-    static let sharedInstance = API()
+class RESTClient {
+    private let kRestSignIn = "/user/session"
+    private let baseInstanceUrl: String
+    private let apiKey: String
+    private var restActiveCallCount = 0
     
-    private var sessionToken: String?
+    init(apiKey:String, instanceUrl:String) {
+        self.apiKey = apiKey
+        self.baseInstanceUrl = instanceUrl
+    }
+    var sessionToken: String?
     var isSignedIn: Bool {
         return (sessionToken != nil)
     }
+    func signOut() {
+        sessionToken = nil
+    }
     
-    // MARK: - Public Interface
-    func signInWithEmail(email:String, password:String, resultClosure: RestResultClosure) {
+    func signInWithEmail(email:String, password:String, signInHandler: SignInHandler) {
         let requestData = ["email" : email, "password" : password]
         
-        callApiWithPath(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in
+        callRestService(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in
             if callResult.bIsSuccess {
                 if self.setUserDataFromJson(callResult.json) {
-                    resultClosure(RestCallResult.Success(result: nil))
+                    signInHandler(true)
                 }
                 else {
-                    let error = NSError(domain: "DreamFactoryAPI", code: 0, userInfo: ["Error" : "No session token found."])
-                    resultClosure(RestCallResult.Failure(error: error))
+                    //let error = NSError(domain: "DreamFactoryAPI", code: 0, userInfo: ["Error" : "No session token found."])
+                    signInHandler(false)
                 }
             }
         }
     }
-    func getContacts(groupId:NSNumber?, resultClosure: RestResultClosure) {
-        callApiWithPath(kRestGetNames, method: .GET, queryParams: nil, body: nil, resultClosure: resultClosure)
-    }
-    
-    // MARK: - Rest Handling
-    private func sessionHeaderParams() -> [String: String] {
-        var dict = ["Content-Type" : "application/json",
-                    "X-DreamFactory-Api-Key": kApiKey]
-        if let token = sessionToken {
-            dict["X-DreamFactory-Session-Token"] = token
-        }
-        return dict
-    }
-    
-    private func callCountIncrement(bIsEntry:Bool) {
-        synchronizedSelf() {
-            restActiveCallCount = max(0, restActiveCallCount + (bIsEntry ? 1 : -1))
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                let bShowNetworkActivity = restActiveCallCount > 0
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = bShowNetworkActivity
-            }
-        }
-    }
-    
-    private func setUserDataFromJson(signInJson:JSON?) -> Bool {
-        if let signInJson = signInJson {
-            sessionToken = signInJson["session_token"] as? String
-        }
-        else {
-            sessionToken = nil
-        }
-        // Could set other data here
-        return (sessionToken != nil)
-    }
-    private func callApiWithPath(path: String, method:HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?, resultClosure:RestResultClosure) {
+
+    func callRestService(relativePath: String, method:HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?, resultClosure:RestResultClosure) {
+        
+        let path = baseInstanceUrl + relativePath
         
         callCountIncrement(true)
         let request = buildRequest(path, method: method, queryParams: queryParams, body: body)
@@ -121,6 +93,37 @@ class API {
             resultClosure(callResult)
         })
         task.resume()
+    }
+    
+    // MARK: - Rest Handling
+    private func sessionHeaderParams() -> [String: String] {
+        var dict = ["Content-Type" : "application/json",
+                    "X-DreamFactory-Api-Key": apiKey]
+        if let token = sessionToken {
+            dict["X-DreamFactory-Session-Token"] = token
+        }
+        return dict
+    }
+    
+    private func callCountIncrement(bIsEntry:Bool) {
+        synchronizedSelf() {
+            restActiveCallCount = max(0, restActiveCallCount + (bIsEntry ? 1 : -1))
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                NSNotificationCenter.defaultCenter().postNotificationName(kRESTServerActiveCountUpdated, object: self, userInfo: ["count" : NSNumber.init(long: self.restActiveCallCount)])
+            }
+        }
+    }
+    
+    private func setUserDataFromJson(signInJson:JSON?) -> Bool {
+        if let signInJson = signInJson {
+            sessionToken = signInJson["session_token"] as? String
+        }
+        else {
+            sessionToken = nil
+        }
+        // Could set other data here
+        return (sessionToken != nil)
     }
     private func checkData(data: NSData?, response: NSURLResponse?, error: NSError?) -> RestCallResult {
         var parsedJSONResults: JSON?

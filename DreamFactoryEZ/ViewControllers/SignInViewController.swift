@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignInViewController: UIViewController {
+class SignInViewController: UIViewController, SignInDelegate {
 
     private var bFirstShowingOfView:Bool = true
     
@@ -19,23 +19,23 @@ class SignInViewController: UIViewController {
     }
 
     override func viewDidAppear(animated: Bool) {
-        if bFirstShowingOfView && API.sharedInstance.isSignedIn {
+        if bFirstShowingOfView && DataAccess.sharedInstance.isSignedIn() {
             performSegueWithIdentifier("ContactsSegue", sender: self)
         }
     }
 
     @IBAction func signInAction() {
-        API.sharedInstance.signInWithEmail("user1@zcage.com", password: "password") { (result) in
-            if result.bIsSuccess {
-                print("SignIn Success")
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.bFirstShowingOfView = false
-                    self.performSegueWithIdentifier("ContactsSegue", sender: self)
-                }
-            }
-            else {
-                print("SignIn Error: \(result.error)")
-            }
+        DataAccess.sharedInstance.signInWithEmail("user1@zcage.com", password: "password", signInDelegate: self)
+    }
+    
+    // MARK: - SignInDelegate
+    func userIsSignedIn(bSignedIn: Bool) {
+        if bSignedIn {
+            self.bFirstShowingOfView = false
+            self.performSegueWithIdentifier("ContactsSegue", sender: self)
+        }
+        else {
+            
         }
     }
     /*

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ContactsViewController: UITableViewController {
+class ContactsViewController: UITableViewController, ContactsDelegate {
 
     private let kCellID = "CellID"
     
@@ -22,33 +22,22 @@ class ContactsViewController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        API.sharedInstance.getContacts(nil) { (restResult) in
-            if restResult.bIsSuccess {
-                //print("Result \(restResult.json)")
-                var newNames = [String]()
-                if let contactsArray = restResult.json?["resource"] as? JSONArray {
-                    for contact in contactsArray {
-                        if let fName = contact["first_name"], let lName = contact["last_name"] {
-                            let name = "\(lName), \(fName)"
-                            newNames.append(name)
-                            newNames.sortInPlace()
-                        }
-                    }
-                }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.names = newNames
-                    self.tableView.reloadData()
-                }
-                
-            }
-            else {
-                print("Error \(restResult.error)")
-            }
-            
-        }
+        DataAccess.sharedInstance.getContacts(nil, resultDelegate: self)
     }
+    
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    // MARK: ContactsDelegate
+    func setContacts(contacts: [String]) {
+        self.names = contacts
+        self.tableView.reloadData()
+    }
+    func dataAccessError(error: NSError?) {
+        if let error = error {
+            print("Error: \(error)")
+        }
     }
     
     // MARK: UITableViewDataSource
