@@ -5,7 +5,7 @@
 //  Created by Eric Elfner on 2016-05-04.
 //  Copyright © 2016 Eric Elfner. All rights reserved.
 //
-// Basic helpers for JSON. Would recommend using SwiftyJSON though.
+// Basic helpers for JSON. Would recommend using SwiftyJSON, but this project is built for no 3rd party requirements.
 
 import Foundation
 
