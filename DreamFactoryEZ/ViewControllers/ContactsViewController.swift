@@ -8,27 +8,55 @@
 
 import UIKit
 
-class ContactsViewController: UITableViewController, ContactsDelegate {
+class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate {
 
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     private let kCellID = "CellID"
-    
-    //private var names = [String]()
-    private var names = ["One", "Two", "Three"]
+    private let dataAccess = DataAccess.sharedInstance
+
+    private var names = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self, action: #selector(settingsSelected))
+        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        DataAccess.sharedInstance.getContacts(nil, resultDelegate: self)
+    override func viewDidAppear(animated: Bool) {
+        if dataAccess.isSignedIn() {
+            DataAccess.sharedInstance.getContacts(nil, resultDelegate: self)
+        }
+        else {
+            performSegueWithIdentifier("SignInSegue", sender: self)
+        }
     }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    @objc func settingsSelected() {
+        // Could go to a complete Settings View, but here we just show the SignIn
+        performSegueWithIdentifier("SignInSegue", sender: self)
+    }
+
+    @objc func activityChanged(notification:NSNotification) {
+        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+        if activityCount > 0 {
+            activityIndicator.startAnimating()
+            //UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        }
+        else {
+            activityIndicator.stopAnimating()
+            //UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        }
+    }
+
     // MARK: ContactsDelegate
     func setContacts(contacts: [String]) {
         self.names = contacts
@@ -41,10 +69,10 @@ class ContactsViewController: UITableViewController, ContactsDelegate {
     }
     
     // MARK: UITableViewDataSource
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return names.count
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
         
         if (cell == nil) {

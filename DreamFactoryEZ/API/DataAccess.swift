@@ -21,7 +21,8 @@ private let kRestGetNames = "/db/_table/contact?fields=first_name%2C%20last_name
 typealias GetContactsHandler = ([String], NSError?)->Void
 
 protocol SignInDelegate {
-    func userIsSignedIn(bSignedIn:Bool)
+    func userIsSignedInSuccess(bSignedIn:Bool)
+    func userIsSignedOut()
 }
 protocol ContactsDelegate {
     func setContacts(contacts:[String])
@@ -40,14 +41,14 @@ class DataAccess {
     func signInWithEmail(email:String, password:String, signInDelegate: SignInDelegate) {
         restClient.signInWithEmail(email, password: password) { (bSignedIn) in
             dispatch_async(dispatch_get_main_queue()) {
-                signInDelegate.userIsSignedIn(bSignedIn)
+                signInDelegate.userIsSignedInSuccess(bSignedIn)
             }
         }
     }
     func signOut(signInDelegate: SignInDelegate) {
         restClient.signOut()
         dispatch_async(dispatch_get_main_queue()) {
-            signInDelegate.userIsSignedIn(false)
+            signInDelegate.userIsSignedOut()
         }
     }
     

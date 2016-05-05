@@ -15,9 +15,8 @@ class SignInViewController: UIViewController, SignInDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    
-    private var bFirstShowingOfView:Bool = true
     private let dataAccess = DataAccess.sharedInstance
     
     override func viewDidLoad() {
@@ -26,16 +25,31 @@ class SignInViewController: UIViewController, SignInDelegate {
         // Do any additional setup after loading the view.
         signInView.layer.cornerRadius = 6
         signInView.layer.masksToBounds = true
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
     }
 
     override func viewWillAppear(animated: Bool) {
         updateViewForSignedInState(dataAccess.isSignedIn())
     }
-    override func viewDidAppear(animated: Bool) {
-        if bFirstShowingOfView && dataAccess.isSignedIn() {
-            performSegueWithIdentifier("ContactsSegue", sender: self)
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    // Could just use UIApplication network, but it is not dramatic enough
+    @objc func activityChanged(notification:NSNotification) {
+        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+        if activityCount > 0 {
+            activityIndicator.startAnimating()
+            //UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        }
+        else {
+            activityIndicator.stopAnimating()
+            //UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         }
     }
+    
     func updateViewForSignedInState(bIsSignedIn:Bool) {
         if bIsSignedIn {
             emailTextField.enabled = false
@@ -60,19 +74,26 @@ class SignInViewController: UIViewController, SignInDelegate {
             dataAccess.signOut(self)
         }
         else {
-            dataAccess.signInWithEmail("user1@zcage.com", password: "password", signInDelegate: self)
+            let email = emailTextField.text ?? ""  // "user1@zcage.com"
+            let pwd = passwordTextField.text ?? "" // "password"
+            dataAccess.signInWithEmail(email, password: pwd, signInDelegate: self)
         }
     }
     
     // MARK: - SignInDelegate
-    func userIsSignedIn(bSignedIn: Bool) {
+    func userIsSignedInSuccess(bSignedIn: Bool) {
         if bSignedIn {
-            self.bFirstShowingOfView = false
-            self.performSegueWithIdentifier("ContactsSegue", sender: self)
+            self.navigationController?.popViewControllerAnimated(true)
         }
         else {
+            let alert = UIAlertController(title: nil, message: "Sign In Failed", preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+            presentViewController(alert, animated: true, completion: nil)
             updateViewForSignedInState(false)
         }
+    }
+    func userIsSignedOut() {
+        updateViewForSignedInState(false)
     }
     /*
     // MARK: - Navigation

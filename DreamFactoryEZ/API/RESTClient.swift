@@ -65,15 +65,11 @@ class RESTClient {
         let requestData = ["email" : email, "password" : password]
         
         callRestService(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in
+            var bSuccess = false
             if callResult.bIsSuccess {
-                if self.setUserDataFromJson(callResult.json) {
-                    signInHandler(true)
-                }
-                else {
-                    //let error = NSError(domain: "DreamFactoryAPI", code: 0, userInfo: ["Error" : "No session token found."])
-                    signInHandler(false)
-                }
+                bSuccess = self.setUserDataFromJson(callResult.json)
             }
+            signInHandler(bSuccess)
         }
     }
 
