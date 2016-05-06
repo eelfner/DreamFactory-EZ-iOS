@@ -136,6 +136,9 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Abs-j2-aEK">
                                             <rect key="frame" x="215" y="0.0" width="77" height="30"/>
                                             <state key="normal" title="Group: ALL"/>
+                                            <connections>
+                                                <segue destination="GV1-nl-GbA" kind="show" identifier="GroupsSegue" id="6qV-gd-Iox"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -179,6 +182,7 @@
                     <size key="freeformSize" width="300" height="300"/>
                     <connections>
                         <outlet property="activityIndicator" destination="36k-lE-Dv7" id="Irn-Q0-QvP"/>
+                        <outlet property="groupButton" destination="Abs-j2-aEK" id="CUR-y8-Y7N"/>
                         <outlet property="tableView" destination="J7l-Z5-sQ7" id="955-FC-CKt"/>
                         <segue destination="Tvu-kV-Vo5" kind="show" identifier="SignInSegue" id="4Nn-ia-jfX"/>
                     </connections>
@@ -206,6 +210,63 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc7-6O-LuH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="438" y="896"/>
+        </scene>
+        <!--Groups-->
+        <scene sceneID="GL1-6s-BcZ">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="GV1-nl-GbA" customClass="GroupsViewController" customModule="DreamFactoryEZ" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ANe-lm-4WK"/>
+                        <viewControllerLayoutGuide type="bottom" id="AwO-v8-35t"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cq1-x3-PmR">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DzS-US-wzu">
+                                <rect key="frame" x="0.0" y="64" width="300" height="236"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CellID" id="vqK-iu-LfT">
+                                        <rect key="frame" x="0.0" y="28" width="300" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vqK-iu-LfT" id="ab7-E8-ufT">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="GV1-nl-GbA" id="vGC-Da-vJs"/>
+                                    <outlet property="delegate" destination="GV1-nl-GbA" id="Zih-eL-M3I"/>
+                                </connections>
+                            </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="80f-HB-FH5">
+                                <rect key="frame" x="131" y="64" width="37" height="37"/>
+                                <color key="color" white="0.2137316793" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="DzS-US-wzu" firstAttribute="leading" secondItem="cq1-x3-PmR" secondAttribute="leading" id="6Gf-DB-0aL"/>
+                            <constraint firstItem="80f-HB-FH5" firstAttribute="top" secondItem="DzS-US-wzu" secondAttribute="top" id="KAz-F7-QcJ"/>
+                            <constraint firstItem="AwO-v8-35t" firstAttribute="top" secondItem="DzS-US-wzu" secondAttribute="bottom" id="NVi-hO-khs"/>
+                            <constraint firstAttribute="trailing" secondItem="DzS-US-wzu" secondAttribute="trailing" id="UTv-ak-31e"/>
+                            <constraint firstItem="DzS-US-wzu" firstAttribute="top" secondItem="ANe-lm-4WK" secondAttribute="bottom" id="Y0o-0K-2l5"/>
+                            <constraint firstItem="80f-HB-FH5" firstAttribute="centerX" secondItem="cq1-x3-PmR" secondAttribute="centerX" id="h87-zI-J9W"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Groups" id="03J-2o-Lbq"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="300" height="300"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="80f-HB-FH5" id="jxa-p4-BoZ"/>
+                        <outlet property="tableView" destination="DzS-US-wzu" id="IYQ-r3-X09"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cww-ts-CcL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1317" y="1067"/>
         </scene>
     </scenes>
 </document>

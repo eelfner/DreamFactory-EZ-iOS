@@ -8,14 +8,23 @@
 
 import UIKit
 
-class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate {
+protocol GroupDependent {
+    func resetCurrentGroupTo(group:NSNumber?)
+}
 
+class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate {
+    let kGroupsSegue = "GroupsSegue"
+    let kSignInSegue = "SignInSegue"
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var groupButton: UIButton!
+    
     private let kCellID = "CellID"
     private let dataAccess = DataAccess.sharedInstance
 
-    private var names = [String]()
+    private var contacts = [ContactRecord]()
+    private var currentGroup:GroupRecord? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,14 +34,18 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+
+        if dataAccess.isSignedIn() {
+            reloadContactsForGroup(currentGroup)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
-        if dataAccess.isSignedIn() {
-            DataAccess.sharedInstance.getContacts(nil, resultDelegate: self)
+        if !dataAccess.isSignedIn() {
+            performSegueWithIdentifier(kSignInSegue, sender: self)
         }
         else {
-            performSegueWithIdentifier("SignInSegue", sender: self)
+            tableView.reloadData()
         }
     }
     
@@ -42,7 +55,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @objc func settingsSelected() {
         // Could go to a complete Settings View, but here we just show the SignIn
-        performSegueWithIdentifier("SignInSegue", sender: self)
+        performSegueWithIdentifier(kSignInSegue, sender: self)
     }
 
     @objc func activityChanged(notification:NSNotification) {
@@ -57,9 +70,38 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
+    private func reloadContactsForGroup(group:GroupRecord?) {
+        currentGroup = group
+        let label = group?.name ?? "ALL Groups"
+        groupButton.setTitle(label, forState: .Normal)
+        dataAccess.getContacts(currentGroup, resultDelegate: self)
+    }
+    
+    @IBAction func groupsAction() {
+        performSegueWithIdentifier(kGroupsSegue, sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == kSignInSegue {
+            if let vc = segue.destinationViewController as? SignInViewController {
+                vc.completionClosure = { _ in
+                    self.reloadContactsForGroup(nil)
+                }
+            }
+        }
+        else if segue.identifier == kGroupsSegue {
+            if let vc = segue.destinationViewController as? GroupsViewController {
+                vc.selectedGroup = currentGroup
+                vc.completionClosure = { (newGroup) in
+                    self.reloadContactsForGroup(newGroup)
+                }
+            }
+        }
+    }
+    
     // MARK: ContactsDelegate
-    func setContacts(contacts: [String]) {
-        self.names = contacts
+    func setContacts(contacts: [ContactRecord]) {
+        self.contacts = contacts
         self.tableView.reloadData()
     }
     func dataAccessError(error: NSError?) {
@@ -70,7 +112,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: UITableViewDataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return names.count
+        return contacts.count
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
@@ -78,7 +120,8 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         if (cell == nil) {
             cell = UITableViewCell(style: .Default, reuseIdentifier: kCellID)
         }
-        cell!.textLabel?.text = names[indexPath.row]
+        let contact = contacts[indexPath.row]
+        cell!.textLabel?.text = contact.fullName
         return cell!
     }
 }

@@ -16,7 +16,8 @@ import Foundation
 
 private let kApiKey = "e71ef61795613a90bd8c03f0a742bfd67365262fec4f3fec8961beee40f7d1ed"
 private let kBaseInstanceUrl = "https://df-ft-eric-elfner.enterprise.dreamfactory.com/api/v2"
-private let kRestGetNames = "/db/_table/contact?fields=first_name%2C%20last_name"
+private let kRestGetAllContacts = "/db/_table/contact"
+private let kRestGetGroups = "/db/_table/contact_group"
 
 typealias GetContactsHandler = ([String], NSError?)->Void
 
@@ -28,13 +29,18 @@ protocol SignInDelegate {
     func userIsSignedOut()
 }
 protocol ContactsDelegate {
-    func setContacts(contacts:[String])
+    func setContacts(contacts:[ContactRecord])
+    func dataAccessError(error:NSError?)
+}
+protocol GroupsDelegate {
+    func setGroups(groups:[GroupRecord])
     func dataAccessError(error:NSError?)
 }
 
 class DataAccess {
     static let sharedInstance = DataAccess()
     
+    var currentGroupID: NSNumber? = nil
     private var restClient = RESTClient(apiKey: kApiKey, instanceUrl: kBaseInstanceUrl)
     
     func isSignedIn() -> Bool {
@@ -62,22 +68,45 @@ class DataAccess {
         }
     }
     
-    func getContacts(groupId:NSNumber?, resultDelegate: ContactsDelegate) {
-        restClient.callRestService(kRestGetNames, method: .GET, queryParams: nil, body: nil) { restResult in
+    func getContacts(groupId:GroupRecord?, resultDelegate: ContactsDelegate) {
+        let queryParams = ["order" : "last_name asc, first_name asc"]
+        restClient.callRestService(kRestGetAllContacts, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
                 //print("Result \(restResult.json)")
-                var newNames = [String]()
+                var contacts = [ContactRecord]()
                 if let contactsArray = restResult.json?["resource"] as? JSONArray {
-                    for contact in contactsArray {
-                        if let fName = contact["first_name"], let lName = contact["last_name"] {
-                            let name = "\(lName), \(fName)"
-                            newNames.append(name)
-                            newNames.sortInPlace()
+                    for contactJSON in contactsArray {
+                        if let contact = ContactRecord(json:contactJSON) {
+                            contacts.append(contact)
                         }
                     }
                 }
                 dispatch_async(dispatch_get_main_queue()) {
-                    resultDelegate.setContacts(newNames)
+                    resultDelegate.setContacts(contacts)
+                }
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Error \(restResult.error)")
+                    resultDelegate.dataAccessError(restResult.error)
+                }
+            }
+        }
+    }
+    func getGroups(groupId:NSNumber?, resultDelegate: GroupsDelegate) {
+        restClient.callRestService(kRestGetGroups, method: .GET, queryParams: nil, body: nil) { restResult in
+            if restResult.bIsSuccess {
+                //print("Result \(restResult.json)")
+                var groups = [GroupRecord]()
+                if let groupsArray = restResult.json?["resource"] as? JSONArray {
+                    for groupJSON in groupsArray {
+                        if let group = GroupRecord(json:groupJSON) {
+                            groups.append(group)
+                        }
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue()) {
+                    resultDelegate.setGroups(groups)
                 }
             }
             else {

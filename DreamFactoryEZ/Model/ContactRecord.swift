@@ -19,7 +19,7 @@ class ContactRecord: Equatable {
     var imageURL: String?
     
     var fullName: String {
-        return "\(firstName) \(lastName)"
+        return "\(lastName), \(firstName)"
     }
     
     init?(json: JSON) {
@@ -35,6 +35,24 @@ class ContactRecord: Equatable {
             return nil
         }
     }
+    static func fromJsonArray(jsonArray:JSONArray)->[ContactRecord] {
+        var contacts = [ContactRecord]()
+        for json in jsonArray {
+            if let contact = ContactRecord(json: json) {
+                contacts.append(contact)
+            }
+        }
+        return contacts
+//        let sortedContacts = contacts.sort { (r1, r2) -> Bool in
+//            switch r1.lastName.compare(r2.lastName) {
+//            case .OrderedAscending: return true
+//            case .OrderedDescending: return false
+//            case .OrderedSame: return (r1.firstName.compare(r2.firstName) == .OrderedAscending)
+//            }
+//        }
+//        return sortedContacts
+    }
+
 }
 
 func ==(lhs: ContactRecord, rhs: ContactRecord) -> Bool {

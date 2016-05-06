@@ -20,6 +20,7 @@
 		B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C261CDA66A500B15BEB /* GroupRecord.swift */; };
 		B6BE3C2B1CDA686B00B15BEB /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C2A1CDA686B00B15BEB /* JSON.swift */; };
 		B6FCB6DE1CDB653000E1728C /* DataAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FCB6DD1CDB653000E1728C /* DataAccess.swift */; };
+		B6FCB6E01CDBDB6000E1728C /* GroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FCB6DF1CDBDB6000E1728C /* GroupsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		B6BE3C261CDA66A500B15BEB /* GroupRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupRecord.swift; sourceTree = "<group>"; };
 		B6BE3C2A1CDA686B00B15BEB /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		B6FCB6DD1CDB653000E1728C /* DataAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAccess.swift; sourceTree = "<group>"; };
+		B6FCB6DF1CDBDB6000E1728C /* GroupsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 		B6BE3C191CDA65E200B15BEB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B6FCB6DF1CDBDB6000E1728C /* GroupsViewController.swift */,
 				B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */,
 				B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */,
 			);
@@ -246,6 +249,7 @@
 				B63E30621CD91FD900842E68 /* AppDelegate.swift in Sources */,
 				B6BE3C201CDA665C00B15BEB /* RESTClient.swift in Sources */,
 				B6BE3C271CDA66A500B15BEB /* ContactDetailRecord.swift in Sources */,
+				B6FCB6E01CDBDB6000E1728C /* GroupsViewController.swift in Sources */,
 				B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */,
 				B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */,
 				B6BE3C281CDA66A500B15BEB /* ContactRecord.swift in Sources */,

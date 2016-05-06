@@ -18,7 +18,8 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private let dataAccess = DataAccess.sharedInstance
-    
+    var completionClosure: (()->Void)? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -120,6 +121,7 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     // MARK: - SignInDelegate
     func userIsSignedInSuccess(bSignedIn: Bool) {
         if bSignedIn {
+            self.completionClosure?()
             self.navigationController?.popViewControllerAnimated(true)
         }
         else {
