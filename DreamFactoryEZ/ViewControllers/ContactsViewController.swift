@@ -38,6 +38,9 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self, action: #selector(settingsSelected))
         self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
         
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addSelected))
+        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
 
         if dataAccess.isSignedIn() {
@@ -62,7 +65,10 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         // Could go to a complete Settings View, but here we just show the SignIn
         performSegueWithIdentifier(kSignInSegue, sender: self)
     }
-
+    
+    @objc func addSelected() {
+    }
+    
     @objc func activityChanged(notification:NSNotification) {
         let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
         if activityCount > 0 {
