@@ -17,6 +17,7 @@ import Foundation
 private let kApiKey = "e71ef61795613a90bd8c03f0a742bfd67365262fec4f3fec8961beee40f7d1ed"
 private let kBaseInstanceUrl = "https://df-ft-eric-elfner.enterprise.dreamfactory.com/api/v2"
 private let kRestGetAllContacts = "/db/_table/contact"
+private let kRestGetContactGroupRelationship = "/db/_table/contact_group_relationship"
 private let kRestGetGroups = "/db/_table/contact_group"
 
 typealias GetContactsHandler = ([String], NSError?)->Void
@@ -68,7 +69,47 @@ class DataAccess {
         }
     }
     
-    func getContacts(groupId:GroupRecord?, resultDelegate: ContactsDelegate) {
+    func getContacts(group:GroupRecord?, resultDelegate: ContactsDelegate) {
+        if let groupId = group?.id {
+            getContactsForGroup(groupId, resultDelegate: resultDelegate)
+        }
+        else {
+            getContactsAll(resultDelegate)
+        }
+    }
+    // Must query relationship table and specify to return the related contact data.
+    // Sorting cannot be done through REST call.
+    private func getContactsForGroup(groupID: NSNumber, resultDelegate: ContactsDelegate) {
+        let queryParams = ["related" : "contact_by_contact_id", "filter" : "contact_group_id=\(groupID.intValue)"]
+        restClient.callRestService(kRestGetContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
+            if restResult.bIsSuccess {
+                var contacts = [ContactRecord]()
+                if let results = restResult.json?["resource"] as? JSONArray {
+                    for result in results {
+                        if let contactJSON = result["contact_by_contact_id"] as? JSON {
+                            if let contact = ContactRecord(json:contactJSON) {
+                                contacts.append(contact)
+                            }
+                        }
+                    }
+                }
+                contacts.sortInPlace({ (r1, r2) -> Bool in
+                    return r1.fullName < r2.fullName
+                })
+                dispatch_async(dispatch_get_main_queue()) {
+                    resultDelegate.setContacts(contacts)
+                }
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Error \(restResult.error)")
+                    resultDelegate.dataAccessError(restResult.error)
+                }
+            }
+        }
+    }
+
+    private func getContactsAll(resultDelegate: ContactsDelegate) {
         let queryParams = ["order" : "last_name asc, first_name asc"]
         restClient.callRestService(kRestGetAllContacts, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {

@@ -126,30 +126,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rnp-Is-1uJ" userLabel="headerView">
+                                <rect key="frame" x="0.0" y="64" width="300" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Abs-j2-aEK">
+                                        <rect key="frame" x="215" y="0.0" width="77" height="30"/>
+                                        <state key="normal" title="Group: ALL"/>
+                                        <connections>
+                                            <segue destination="GV1-nl-GbA" kind="show" identifier="GroupsSegue" id="6qV-gd-Iox"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Abs-j2-aEK" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" id="CDM-ph-S8S"/>
+                                    <constraint firstAttribute="height" constant="30" id="jgO-Gx-sCm"/>
+                                    <constraint firstAttribute="trailing" secondItem="Abs-j2-aEK" secondAttribute="trailing" constant="8" id="uYZ-A2-67N"/>
+                                </constraints>
+                            </view>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="36k-lE-Dv7">
+                                <rect key="frame" x="131" y="64" width="37" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="37" id="1J8-CL-8nd"/>
+                                    <constraint firstAttribute="height" constant="37" id="oWY-1h-JFd"/>
+                                </constraints>
+                                <color key="color" white="0.21373167934033693" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="J7l-Z5-sQ7">
-                                <rect key="frame" x="0.0" y="64" width="300" height="236"/>
+                                <rect key="frame" x="0.0" y="94" width="300" height="206"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="Rnp-Is-1uJ" userLabel="headerView">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Abs-j2-aEK">
-                                            <rect key="frame" x="215" y="0.0" width="77" height="30"/>
-                                            <state key="normal" title="Group: ALL"/>
-                                            <connections>
-                                                <segue destination="GV1-nl-GbA" kind="show" identifier="GroupsSegue" id="6qV-gd-Iox"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="Abs-j2-aEK" secondAttribute="trailing" constant="8" id="qzQ-Ol-Jh5"/>
-                                        <constraint firstItem="Abs-j2-aEK" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" id="zBV-5F-PLO"/>
-                                    </constraints>
-                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CellID" id="DMV-nV-mu4">
-                                        <rect key="frame" x="0.0" y="58" width="300" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="300" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DMV-nV-mu4" id="jxH-Io-O7V">
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
@@ -162,19 +170,18 @@
                                     <outlet property="delegate" destination="khX-T0-YB2" id="tOH-Q0-GXe"/>
                                 </connections>
                             </tableView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="36k-lE-Dv7">
-                                <rect key="frame" x="131" y="64" width="37" height="37"/>
-                                <color key="color" white="0.21373167934033693" alpha="1" colorSpace="calibratedWhite"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="36k-lE-Dv7" firstAttribute="centerX" secondItem="RwX-AR-ZfE" secondAttribute="centerX" id="L7V-Zp-vPZ"/>
-                            <constraint firstAttribute="trailing" secondItem="J7l-Z5-sQ7" secondAttribute="trailing" id="Nlj-0s-r21"/>
-                            <constraint firstItem="36k-lE-Dv7" firstAttribute="top" secondItem="J7l-Z5-sQ7" secondAttribute="top" id="VGS-TA-Zds"/>
-                            <constraint firstItem="J7l-Z5-sQ7" firstAttribute="top" secondItem="ZLL-jX-f0N" secondAttribute="bottom" id="bAj-XW-20l"/>
-                            <constraint firstItem="J7l-Z5-sQ7" firstAttribute="leading" secondItem="RwX-AR-ZfE" secondAttribute="leading" id="eBB-qp-VRw"/>
-                            <constraint firstItem="vLs-Aj-N7Q" firstAttribute="top" secondItem="J7l-Z5-sQ7" secondAttribute="bottom" id="rLF-aK-qTc"/>
+                            <constraint firstItem="36k-lE-Dv7" firstAttribute="centerX" secondItem="RwX-AR-ZfE" secondAttribute="centerX" id="0Ch-TN-5YG"/>
+                            <constraint firstItem="Rnp-Is-1uJ" firstAttribute="top" secondItem="ZLL-jX-f0N" secondAttribute="bottom" id="ANt-2E-eCS"/>
+                            <constraint firstAttribute="trailing" secondItem="J7l-Z5-sQ7" secondAttribute="trailing" id="E9j-BP-ud2"/>
+                            <constraint firstItem="vLs-Aj-N7Q" firstAttribute="top" secondItem="J7l-Z5-sQ7" secondAttribute="bottom" id="IgF-R3-0I8"/>
+                            <constraint firstAttribute="trailing" secondItem="Rnp-Is-1uJ" secondAttribute="trailing" id="JnS-AI-tSH"/>
+                            <constraint firstItem="36k-lE-Dv7" firstAttribute="top" secondItem="ZLL-jX-f0N" secondAttribute="bottom" id="Luj-e1-MCv"/>
+                            <constraint firstItem="Rnp-Is-1uJ" firstAttribute="leading" secondItem="RwX-AR-ZfE" secondAttribute="leading" id="imF-Py-VFk"/>
+                            <constraint firstItem="J7l-Z5-sQ7" firstAttribute="leading" secondItem="RwX-AR-ZfE" secondAttribute="leading" id="uZs-Nn-Y7T"/>
+                            <constraint firstItem="J7l-Z5-sQ7" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="bottom" id="vvK-I4-Wyb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Contacts" id="zfu-nb-0Hu"/>
