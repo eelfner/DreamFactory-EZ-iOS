@@ -94,6 +94,7 @@ class RESTClient {
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
         config.HTTPAdditionalHeaders = sessionHeaderParams()
         let session = NSURLSession(configuration: config)
+        print("REST->\(request.pathAndQuery())")
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             self.callCountIncrement(false)

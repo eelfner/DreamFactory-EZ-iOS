@@ -49,3 +49,31 @@ extension Dictionary {
         return parameterArray.joinWithSeparator("&")
     }
 }
+
+extension NSURLRequest {
+    func pathAndQuery() -> String {
+        if let url = URL {
+            var p = url.path ?? "/"
+            if let q = url.query {
+                let qDecoded = q.stringByRemovingPercentEncoding ?? ""
+                p += "?\(qDecoded)"
+            }
+            return p
+        }
+        else {
+            return ""
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
