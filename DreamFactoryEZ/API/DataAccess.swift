@@ -37,6 +37,11 @@ protocol GroupsDelegate {
     func setGroups(groups:[GroupRecord])
     func dataAccessError(error:NSError?)
 }
+protocol ContactDetailDelegate {
+    func setContactGroups(groups: [GroupRecord])
+    func setContactDetails(details: [ContactDetailRecord])
+    func dataAccessError(error:NSError?)
+}
 
 class DataAccess {
     static let sharedInstance = DataAccess()

@@ -12,6 +12,7 @@
 		B63E30691CD91FDA00842E68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B63E30681CD91FDA00842E68 /* Assets.xcassets */; };
 		B63E306C1CD91FDA00842E68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */; };
 		B63E30771CD91FDA00842E68 /* DreamFactoryEZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */; };
+		B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */; };
 		B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */; };
 		B6BE3C1D1CDA661E00B15BEB /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */; };
 		B6BE3C201CDA665C00B15BEB /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1F1CDA665C00B15BEB /* RESTClient.swift */; };
@@ -43,6 +44,7 @@
 		B63E30721CD91FDA00842E68 /* DreamFactoryEZTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DreamFactoryEZTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamFactoryEZTests.swift; sourceTree = "<group>"; };
 		B63E30781CD91FDA00842E68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1F1CDA665C00B15BEB /* RESTClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
@@ -117,9 +119,10 @@
 		B6BE3C191CDA65E200B15BEB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */,
+				B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */,
 				B6FCB6DF1CDBDB6000E1728C /* GroupsViewController.swift */,
 				B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */,
-				B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				B6BE3C271CDA66A500B15BEB /* ContactDetailRecord.swift in Sources */,
 				B6FCB6E01CDBDB6000E1728C /* GroupsViewController.swift in Sources */,
 				B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */,
+				B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */,
 				B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */,
 				B6BE3C281CDA66A500B15BEB /* ContactRecord.swift in Sources */,
 				B6BE3C2B1CDA686B00B15BEB /* JSON.swift in Sources */,
