@@ -60,7 +60,7 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     func dataAccessError(error: NSError?) {
         if let error = error {
-            print("Error: \(error)")
+            print("Error: \(error.localizedDescription)")
         }
     }
     

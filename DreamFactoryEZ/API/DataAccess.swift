@@ -102,7 +102,6 @@ class DataAccess {
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    print("Error \(restResult.error)")
                     resultDelegate.dataAccessError(restResult.error)
                 }
             }
@@ -113,7 +112,6 @@ class DataAccess {
         let queryParams = ["order" : "last_name asc, first_name asc"]
         restClient.callRestService(kRestGetAllContacts, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
-                //print("Result \(restResult.json)")
                 var contacts = [ContactRecord]()
                 if let contactsArray = restResult.json?["resource"] as? JSONArray {
                     for contactJSON in contactsArray {
@@ -128,7 +126,6 @@ class DataAccess {
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    print("Error \(restResult.error)")
                     resultDelegate.dataAccessError(restResult.error)
                 }
             }
@@ -137,7 +134,6 @@ class DataAccess {
     func getGroups(groupId:NSNumber?, resultDelegate: GroupsDelegate) {
         restClient.callRestService(kRestGetGroups, method: .GET, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
-                //print("Result \(restResult.json)")
                 var groups = [GroupRecord]()
                 if let groupsArray = restResult.json?["resource"] as? JSONArray {
                     for groupJSON in groupsArray {
@@ -152,7 +148,6 @@ class DataAccess {
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    print("Error \(restResult.error)")
                     resultDelegate.dataAccessError(restResult.error)
                 }
             }

@@ -134,7 +134,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     func dataAccessError(error: NSError?) {
         if let error = error {
-            print("Error: \(error)")
+            print("Error: \(error.localizedDescription)")
         }
     }
     // MARK: - UISearchBarDelegate

@@ -14,12 +14,19 @@ import Foundation
 
 let kRESTServerActiveCountUpdated = "kRESTServerActiveCountUpdated"
 
+// For Testing can use expired token with presets in RESTClient
+//let kExpiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsInVzZXJfaWQiOjIsImVtYWlsIjoidXNlcjFAemNhZ2UuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9kZi1mdC1lcmljLWVsZm5lci5lbnRlcnByaXNlLmRyZWFtZmFjdG9yeS5jb21cL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NjI1NzA2NjEsImV4cCI6MTQ2MjU3NDI2MSwibmJmIjoxNDYyNTcwNjYxLCJqdGkiOiJkYjcyZjUxNWUxN2RiZTdlZWVjMDExNzliZGY2NTJhMiJ9.0NsO64trg3WgTh2-AUwSPhhz2XqSiXf5DXJVgHeH73Q"
+//var sessionToken: String? = kExpiredToken
+//var sessionEmail: String? = "user1@zcage.com" // Valid user
+//var sessionPwd: String? = "password" // Valid password
+
 typealias SuccessHandler = (Bool)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
 enum RestCallResult {
-    case Success(result:JSON?)
-    case Failure(error:NSError)
+    case Success(result: JSON?)
+    case Failure(error: NSError)
+    case UnAuthorizedReauthenticate
     
     var bIsSuccess: Bool {
         switch (self) {
@@ -54,7 +61,10 @@ class RESTClient {
         self.apiKey = apiKey
         self.baseInstanceUrl = instanceUrl
     }
-    var sessionToken: String?
+    var sessionToken: String? = nil
+    var sessionEmail: String? = nil
+    var sessionPwd: String? = nil
+
     var isSignedIn: Bool {
         return (sessionToken != nil)
     }
@@ -99,7 +109,20 @@ class RESTClient {
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             self.callCountIncrement(false)
             let callResult = self.checkData(data, response: response, error: error)
-            resultClosure(callResult)
+            switch callResult {
+            case .UnAuthorizedReauthenticate:
+                print("REST:UnAuthorizedReauthenticate")
+                self.signInWithEmail(self.sessionEmail!, password: self.sessionPwd!) { (bSuccess) in
+                    if bSuccess && self.restActiveCallCount < 20 { // ReAuth worked, try original request again. Prevent endless looping.
+                        self.callRestService(relativePath, method: method, queryParams: queryParams, body: body, resultClosure: resultClosure)
+                    }
+                    else {
+                        resultClosure(callResult)
+                    }
+                }
+            default:
+                resultClosure(callResult)
+            }
         })
         task.resume()
     }
@@ -127,9 +150,13 @@ class RESTClient {
     private func setUserDataFromJson(signInJson:JSON?) -> Bool {
         if let signInJson = signInJson {
             sessionToken = signInJson["session_token"] as? String
+            sessionEmail = signInJson["user_email"] as? String
+            sessionPwd = signInJson["user_passwor"] as? String
         }
         else {
             sessionToken = nil
+            sessionEmail = nil
+            sessionPwd = nil
         }
         // Could set other data here
         return (sessionToken != nil)
@@ -153,16 +180,34 @@ class RESTClient {
         }
         else {
             let statusCode = (response as! NSHTTPURLResponse).statusCode
-            if NSLocationInRange(statusCode, NSMakeRange(200, 99)) {
+            if statusCode == 401 && sessionToken != nil && sessionEmail != nil && sessionPwd != nil {
+                sessionToken = nil
+                return .UnAuthorizedReauthenticate
+            }
+            else if NSLocationInRange(statusCode, NSMakeRange(200, 99)) {
                 return .Success(result: parsedJSONResults)
             }
             else {
-                let error = NSError(domain: "DreamFactoryAPI", code: statusCode, userInfo: parsedJSONResults)
+                let error = self.restErrorForStatusCode(statusCode, json: parsedJSONResults)
                 return .Failure(error: error)
             }
         }
     }
-    
+    // DreamFactory specific messaging extraction
+    private func restErrorForStatusCode(statusCode: Int, json: JSON?) -> NSError {
+        var userInfo = json
+        if let pr = json {
+            if let errorDict = pr["error"] {
+                if let errorDict = errorDict as? JSON {
+                    if let msg = errorDict["message"] as? String {
+                        userInfo = [NSLocalizedDescriptionKey : msg]
+                    }
+                }
+            }
+        }
+        let error = NSError(domain: "DreamFactoryAPI", code: statusCode, userInfo: userInfo)
+        return error
+    }
     private func buildRequest(path: String, method: HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?) -> NSURLRequest {
         let request = NSMutableURLRequest()
         var requestUrl = path
