@@ -95,12 +95,14 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
         dataAccess.registerWithEmail(email, password: pwd, registrationDelegate: self)
     }
     // MARK: - RegisterDelegate
-    func userIsRegisteredSuccess(bSuccess:Bool) {
+    func userIsRegisteredSuccess(bSuccess:Bool, message: String?) {
         if bSuccess {
             self.navigationController?.popViewControllerAnimated(true)
         }
         else {
-            let alert = UIAlertController(title: nil, message: "Registration Failed", preferredStyle: .Alert)
+            let serverMsg = message ?? "Please try again."
+            let msg = "Invalid credentials. Please try again. \n[\(serverMsg)]"
+            let alert = UIAlertController(title: "Registration Failed", message: msg, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(alert, animated: true, completion: nil)
             updateViewForSignedInState(false)
@@ -119,13 +121,14 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     
     
     // MARK: - SignInDelegate
-    func userIsSignedInSuccess(bSignedIn: Bool) {
+    func userIsSignedInSuccess(bSignedIn: Bool, message: String?) {
         if bSignedIn {
             self.completionClosure?()
             self.navigationController?.popViewControllerAnimated(true)
         }
         else {
-            let alert = UIAlertController(title: nil, message: "Sign In Failed", preferredStyle: .Alert)
+            let msg = message ?? "Please retry."
+            let alert = UIAlertController(title: "Sign In Failed", message: msg, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
             presentViewController(alert, animated: true, completion: nil)
             updateViewForSignedInState(false)

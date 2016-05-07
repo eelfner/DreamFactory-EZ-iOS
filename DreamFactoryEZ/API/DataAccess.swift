@@ -23,10 +23,10 @@ private let kRestGetGroups = "/db/_table/contact_group"
 typealias GetContactsHandler = ([String], NSError?)->Void
 
 protocol RegistrationDelegate {
-    func userIsRegisteredSuccess(bSignedIn:Bool)
+    func userIsRegisteredSuccess(bSignedIn:Bool, message:String?)
 }
 protocol SignInDelegate {
-    func userIsSignedInSuccess(bSignedIn:Bool)
+    func userIsSignedInSuccess(bSignedIn:Bool, message:String?)
     func userIsSignedOut()
 }
 protocol ContactsDelegate {
@@ -54,16 +54,16 @@ class DataAccess {
     }
     
     func registerWithEmail(email:String, password:String, registrationDelegate: RegistrationDelegate) {
-        restClient.registerWithEmail(email, password: password) { (bSuccess) in
+        restClient.registerWithEmail(email, password: password) { (bSuccess, message) in
             dispatch_async(dispatch_get_main_queue()) {
-                registrationDelegate.userIsRegisteredSuccess(bSuccess)
+                registrationDelegate.userIsRegisteredSuccess(bSuccess, message: message)
             }
         }
     }
     func signInWithEmail(email:String, password:String, signInDelegate: SignInDelegate) {
-        restClient.signInWithEmail(email, password: password) { (bSignedIn) in
+        restClient.signInWithEmail(email, password: password) { (bSignedIn, message) in
             dispatch_async(dispatch_get_main_queue()) {
-                signInDelegate.userIsSignedInSuccess(bSignedIn)
+                signInDelegate.userIsSignedInSuccess(bSignedIn, message: message)
             }
         }
     }

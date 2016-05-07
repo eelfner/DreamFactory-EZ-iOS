@@ -20,7 +20,7 @@ let kRESTServerActiveCountUpdated = "kRESTServerActiveCountUpdated"
 //var sessionEmail: String? = "user1@zcage.com" // Valid user
 //var sessionPwd: String? = "password" // Valid password
 
-typealias SuccessHandler = (Bool)->Void
+typealias SuccessHandler = (Bool, String?)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
 enum RestCallResult {
@@ -79,7 +79,7 @@ class RESTClient {
             if callResult.bIsSuccess {
                 self.signInWithEmail(email, password: password, signInHandler: registrationSuccessHandler)
             }
-            registrationSuccessHandler(false)
+            registrationSuccessHandler(false, callResult.error?.localizedDescription)
         }
     }
     
@@ -91,7 +91,7 @@ class RESTClient {
             if callResult.bIsSuccess {
                 bSuccess = self.setUserDataFromJson(callResult.json)
             }
-            signInHandler(bSuccess)
+            signInHandler(bSuccess, callResult.error?.localizedDescription)
         }
     }
 
@@ -112,7 +112,7 @@ class RESTClient {
             switch callResult {
             case .UnAuthorizedReauthenticate:
                 print("REST:UnAuthorizedReauthenticate")
-                self.signInWithEmail(self.sessionEmail!, password: self.sessionPwd!) { (bSuccess) in
+                self.signInWithEmail(self.sessionEmail!, password: self.sessionPwd!) { (bSuccess, _) in
                     if bSuccess && self.restActiveCallCount < 20 { // ReAuth worked, try original request again. Prevent endless looping.
                         self.callRestService(relativePath, method: method, queryParams: queryParams, body: body, resultClosure: resultClosure)
                     }
