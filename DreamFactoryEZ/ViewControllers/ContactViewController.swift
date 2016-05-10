@@ -32,7 +32,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-        contactImageView.image = UIImage(named: "backgroundPerson")
+        contactImageView.image = UIImage(named: "default_portrait")
         contactFullNameLabel.text = nil
         contactSkypeLabel.text = nil
         contactTwitterLabel.text = nil
@@ -68,7 +68,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     private func updateContact() {
-        contactImageView.image = UIImage(named: "backgroundPerson")
+        contactImageView.image = UIImage(named: "default_portrait")
         contactFullNameLabel.text = contact?.fullName
         contactSkypeLabel.text = contact?.skype
         contactTwitterLabel.text = contact?.twitter
