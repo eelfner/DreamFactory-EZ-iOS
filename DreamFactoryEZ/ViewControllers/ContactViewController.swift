@@ -19,6 +19,9 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var contactTwitterLabel: UILabel!
     @IBOutlet weak var contactNotesLabel: UILabel!
     
+    @IBOutlet weak var editImageButton: UILabel!
+    @IBOutlet weak var editNameButton: UILabel!
+    
     private let kAddressCell = "AddressCell"
     private let kGroupCell = "GroupCell"
     private let dataAccess = DataAccess.sharedInstance
@@ -26,7 +29,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     var contact: ContactRecord?
     private var groups = [GroupRecord]()
     private var details = [ContactDetailRecord]()
-    private var bIsEditing = false
+    private var bIsEditMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,30 +63,41 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func setupForView() {
+        bIsEditMode = false
         self.navigationItem.setLeftBarButtonItem(nil, animated: false);
         
         let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(editSelected))
         self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        
+        editImageButton.hidden = true
+        editNameButton.hidden = true
+        
+        tableView.allowsSelection = false
+        tableView.reloadData()
     }
     private func setupForEdit() {
+        bIsEditMode = true
         let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(cancelSelected))
         self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveSelected))
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(saveSelected))
         self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        
+        editImageButton.hidden = false
+        editNameButton.hidden = false
+        
+        tableView.allowsSelection = true
+        tableView.reloadData()
     }
     
     
     @objc func editSelected() {
-        bIsEditing = true
         setupForEdit()
     }
     @objc func saveSelected() {
         // Do Save
-        bIsEditing = false
         setupForView()
     }
     @objc func cancelSelected() {
-        bIsEditing = false
         setupForView()
     }
 
@@ -157,7 +171,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return details.count
-        case 1: return groups.count
+        case 1: return bIsEditMode ? dataAccess.allGroups.count : groups.count
         default: return 0
         }
     }
@@ -178,6 +192,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             let detail = details[iDetail]
             cell.typeLabel.text = detail.type
             cell.addressLabel.text = detail.description
+            cell.accessoryType = bIsEditMode ? .DisclosureIndicator : .None
         }
         
         return cell!
@@ -187,10 +202,49 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         if (cell == nil) {
             cell = UITableViewCell(style: .Default, reuseIdentifier: kGroupCell)
         }
-        cell?.textLabel?.text = groups[iGroup].name
+        if bIsEditMode {
+            let groupName = dataAccess.allGroups[iGroup].name
+            cell?.textLabel?.text = groupName
+            let bIsForUser = userHasGroupName(groupName)
+            cell?.accessoryType = bIsForUser ? .Checkmark : .None
+        }
+        else {
+            cell?.textLabel?.text = groups[iGroup].name
+            cell?.accessoryType = .None
+        }
         return cell!
     }
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        var bCanEdit = false
+        if indexPath.section == 0 && bIsEditMode {
+            bCanEdit = true
+        }
+        return bCanEdit
+    }
+    // MARK: UITableViewDelegate
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        guard bIsEditMode else { return }
+        
+        if indexPath.section == 0 {
+            // TODO Segue
+        }
+        else {
+            if let contact = contact {
+                let selectedGroup = dataAccess.allGroups[indexPath.row]
+                let bHasGroup = userHasGroupName(selectedGroup.name)
+                if bHasGroup {
+                    dataAccess.removeContact(contact, fromGroupId: selectedGroup.id.integerValue, resultDelegate: self)
+                }
+                else {
+                    dataAccess.addContact(contact, toGroupId: selectedGroup.id.integerValue, resultDelegate: self)
+                }
+            }
+        }
+    }
+    func userHasGroupName(groupName:String) -> Bool {
+        let bHasGroup = groups.contains({ (g) -> Bool in g.name == groupName })
+        return bHasGroup
     }
 }
 

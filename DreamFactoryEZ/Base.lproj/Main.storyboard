@@ -289,7 +289,7 @@
             </objects>
             <point key="canvasLocation" x="1398" y="848"/>
         </scene>
-        <!--Groups-->
+        <!--Contact-->
         <scene sceneID="iwZ-iz-Dv2">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="zCU-ls-10R" customClass="ContactViewController" customModule="DreamFactoryEZ" customModuleProvider="target" sceneMemberID="viewController">
@@ -363,6 +363,18 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit Image" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X4O-8N-vha">
+                                        <rect key="frame" x="6" y="0.0" width="81" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit Name/Social/Notes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apq-lV-ufC">
+                                        <rect key="frame" x="110" y="75" width="182" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="0.30285560344827589" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -372,21 +384,25 @@
                                     <constraint firstItem="yDL-0E-br4" firstAttribute="top" secondItem="zps-uP-yvX" secondAttribute="top" constant="8" id="6be-2Y-9a6"/>
                                     <constraint firstItem="2ar-q0-DsU" firstAttribute="top" secondItem="yDL-0E-br4" secondAttribute="bottom" constant="8" id="Br3-qa-wgO"/>
                                     <constraint firstItem="Was-JH-bV0" firstAttribute="leading" secondItem="yDL-0E-br4" secondAttribute="trailing" constant="23" id="CKa-2u-BQU"/>
-                                    <constraint firstAttribute="trailing" secondItem="2ar-q0-DsU" secondAttribute="trailing" constant="8" id="DKH-JE-Hut"/>
+                                    <constraint firstItem="apq-lV-ufC" firstAttribute="top" secondItem="zps-uP-yvX" secondAttribute="top" constant="75" id="KF2-c0-bDv"/>
                                     <constraint firstItem="bNH-kQ-qVY" firstAttribute="leading" secondItem="Was-JH-bV0" secondAttribute="trailing" constant="8" id="OEu-0E-Jou"/>
                                     <constraint firstItem="WjO-wu-hx9" firstAttribute="leading" secondItem="Ovq-EH-5O1" secondAttribute="trailing" constant="8" id="OOO-yO-73E"/>
                                     <constraint firstItem="JJ8-6W-P1O" firstAttribute="centerX" secondItem="zps-uP-yvX" secondAttribute="centerX" id="SVE-km-QSI"/>
                                     <constraint firstItem="Ovq-EH-5O1" firstAttribute="top" secondItem="Was-JH-bV0" secondAttribute="bottom" constant="11" id="XRf-YJ-vRI"/>
                                     <constraint firstItem="JJ8-6W-P1O" firstAttribute="centerY" secondItem="zps-uP-yvX" secondAttribute="centerY" id="YHY-rs-N6M"/>
                                     <constraint firstItem="bNH-kQ-qVY" firstAttribute="top" secondItem="yOg-pR-8xU" secondAttribute="bottom" constant="8" id="apn-T4-A8h"/>
+                                    <constraint firstItem="X4O-8N-vha" firstAttribute="centerX" secondItem="yDL-0E-br4" secondAttribute="centerX" id="cTp-RE-OwG"/>
                                     <constraint firstItem="yOg-pR-8xU" firstAttribute="top" secondItem="zps-uP-yvX" secondAttribute="top" constant="8" id="fkG-dE-Wdf"/>
+                                    <constraint firstItem="apq-lV-ufC" firstAttribute="leading" secondItem="zps-uP-yvX" secondAttribute="leading" constant="110" id="haT-2F-Fay"/>
                                     <constraint firstAttribute="bottom" secondItem="2ar-q0-DsU" secondAttribute="bottom" constant="8" id="jtg-1v-uV5"/>
                                     <constraint firstItem="yOg-pR-8xU" firstAttribute="leading" secondItem="yDL-0E-br4" secondAttribute="trailing" constant="8" id="kz5-Oo-tMC"/>
                                     <constraint firstAttribute="trailing" secondItem="yOg-pR-8xU" secondAttribute="trailing" constant="8" id="meZ-M1-6Dr"/>
+                                    <constraint firstItem="X4O-8N-vha" firstAttribute="top" secondItem="yDL-0E-br4" secondAttribute="bottom" constant="-84" id="noE-VX-yVC"/>
                                     <constraint firstAttribute="trailing" secondItem="WjO-wu-hx9" secondAttribute="trailing" constant="8" id="oak-a2-40o"/>
                                     <constraint firstItem="2ar-q0-DsU" firstAttribute="leading" secondItem="zps-uP-yvX" secondAttribute="leading" constant="8" id="qOu-HY-SHU"/>
                                     <constraint firstItem="yDL-0E-br4" firstAttribute="leading" secondItem="zps-uP-yvX" secondAttribute="leading" constant="8" id="rVe-Si-rAo"/>
                                     <constraint firstItem="Was-JH-bV0" firstAttribute="top" secondItem="yOg-pR-8xU" secondAttribute="bottom" constant="11" id="tR3-N8-IBl"/>
+                                    <constraint firstAttribute="trailing" secondItem="2ar-q0-DsU" secondAttribute="trailing" constant="8" id="vaC-KR-UEO"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HSd-jv-w2A">
@@ -464,7 +480,7 @@ Country</string>
                             <constraint firstItem="HSd-jv-w2A" firstAttribute="leading" secondItem="UfU-XQ-0Rh" secondAttribute="leading" id="xEX-lF-hrN"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Groups" id="EZ9-G5-BXx"/>
+                    <navigationItem key="navigationItem" title="Contact" id="EZ9-G5-BXx"/>
                     <connections>
                         <outlet property="activityIndicator" destination="JJ8-6W-P1O" id="b27-As-8Qj"/>
                         <outlet property="contactFullNameLabel" destination="yOg-pR-8xU" id="KBO-0P-cf9"/>
@@ -472,12 +488,14 @@ Country</string>
                         <outlet property="contactNotesLabel" destination="2ar-q0-DsU" id="Mn9-PC-5oQ"/>
                         <outlet property="contactSkypeLabel" destination="bNH-kQ-qVY" id="VBM-jg-beb"/>
                         <outlet property="contactTwitterLabel" destination="WjO-wu-hx9" id="fYl-Af-9eg"/>
+                        <outlet property="editImageButton" destination="X4O-8N-vha" id="4TD-TQ-40s"/>
+                        <outlet property="editNameButton" destination="apq-lV-ufC" id="xev-Wm-h85"/>
                         <outlet property="tableView" destination="HSd-jv-w2A" id="hGv-r5-aW3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RgU-aM-cMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1250" y="1284"/>
+            <point key="canvasLocation" x="1205" y="1416"/>
         </scene>
     </scenes>
 </document>
