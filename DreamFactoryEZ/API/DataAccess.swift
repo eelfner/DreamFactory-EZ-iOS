@@ -82,12 +82,13 @@ class DataAccess {
             getContactsAll(resultDelegate)
         }
     }
+    
     func getContactDetails(contactId:Int, resultDelegate: ContactDetailDelegate) {
         getContactDetailsInfo(contactId, resultDelegate: resultDelegate)
         getContactDetailsGroups(contactId, resultDelegate: resultDelegate)
     }
+    
     func removeContact(contact: ContactRecord, fromGroupId: Int, resultDelegate: ContactDetailDelegate) {
-        
         // Do not have the ID of the record to remove, but can set id_field and remove with those.
         let queryParams: [String: AnyObject] = ["id_field": "contact_group_id,contact_id"]
         let records: JSONArray = [["contact_group_id": fromGroupId, "contact_id": contact.id.integerValue]]
@@ -104,6 +105,7 @@ class DataAccess {
             }
         }
     }
+    
     func addContact(contact: ContactRecord, toGroupId: Int, resultDelegate: ContactDetailDelegate) {
         let records: JSONArray = [["contact_group_id": toGroupId, "contact_id": contact.id.integerValue]]
         let requestBody: [String: AnyObject] = ["resource": records]
@@ -142,6 +144,7 @@ class DataAccess {
             }
         }
     }
+    
     private func getContactDetailsGroups(contactId:Int, resultDelegate: ContactDetailDelegate) {
         let queryParams = ["related" : "contact_group_by_contact_group_id", "filter" : "contact_id=\(contactId)"]
         restClient.callRestService(kRestGetContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
@@ -170,6 +173,7 @@ class DataAccess {
             }
         }
     }
+    
     // Must query relationship table and specify to return the related contact data.
     // Sorting cannot be done through REST call.
     private func getContactsForGroup(groupID: NSNumber, resultDelegate: ContactsDelegate) {
@@ -224,6 +228,7 @@ class DataAccess {
             }
         }
     }
+    
     private func getAllGroups() {
         restClient.callRestService(kRestGetGroups, method: .GET, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
@@ -244,5 +249,12 @@ class DataAccess {
             }
         }
     }
-
 }
+
+
+
+
+
+
+
+
