@@ -15,6 +15,7 @@ protocol GroupDependent {
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate, UISearchBarDelegate {
     let kGroupsSegue = "GroupsSegue"
     let kSignInSegue = "SignInSegue"
+    let kDetailSegue = "DetailSegue"
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -105,6 +106,15 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                 vc.selectedGroup = currentGroup
                 vc.completionClosure = { (newGroup) in
                     self.reloadContactsForGroup(newGroup)
+                }
+            }
+        }
+        else if segue.identifier == kDetailSegue {
+            if let vc = segue.destinationViewController as? ContactViewController {
+                if let ip = tableView?.indexPathForSelectedRow {
+                    if let contact = contactForIndexPath(ip) {
+                        vc.contact = contact
+                    }
                 }
             }
         }
@@ -203,6 +213,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         return contact
     }
+    
     // MARK: - UITableViewDelegate
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if bIsSearching {

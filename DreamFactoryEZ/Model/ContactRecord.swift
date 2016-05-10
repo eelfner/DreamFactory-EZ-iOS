@@ -30,6 +30,7 @@ class ContactRecord: Equatable {
             notes = json.stringValue("notes")
             skype = json.stringValue("skype")
             twitter = json.stringValue("twitter")
+            imageURL = json["image_url"] as? String
         }
         else {
             return nil
@@ -43,14 +44,6 @@ class ContactRecord: Equatable {
             }
         }
         return contacts
-//        let sortedContacts = contacts.sort { (r1, r2) -> Bool in
-//            switch r1.lastName.compare(r2.lastName) {
-//            case .OrderedAscending: return true
-//            case .OrderedDescending: return false
-//            case .OrderedSame: return (r1.firstName.compare(r2.firstName) == .OrderedAscending)
-//            }
-//        }
-//        return sortedContacts
     }
 
 }

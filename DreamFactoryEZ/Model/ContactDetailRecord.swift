@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ContactDetailRecord {
+class ContactDetailRecord: CustomStringConvertible {
     var id: NSNumber
     var contactId: NSNumber
     var type: String
@@ -20,18 +20,33 @@ class ContactDetailRecord {
     var city: String
     var address: String
     
+    var description: String {
+        var d = ""
+        
+        if phone != "" { d += phone + "\n" }
+        if email != "" { d += email + "\n" }
+        if address != "" { d += address + "\n" }
+        if city != "" || state != "" || zipCode != "" { d += "\(city), \(state) \(zipCode)\n" }
+        if country != "" {d += country + "\n" }
+        
+        if d.hasSuffix("\n") {
+            d = d.substringToIndex(d.endIndex.predecessor())
+        }
+        return d
+    }
+    
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber,
          let _contactId = json["contact_id"] as? NSNumber {
             id = _id
             contactId = _contactId
             
-            type = json.stringValue("type")
+            type = json.stringValue("info_type").uppercaseString
             phone = json.stringValue("phone")
             email = json.stringValue("email")
             country = json.stringValue("country")
             state = json.stringValue("state")
-            zipCode = json.stringValue("state")
+            zipCode = json.stringValue("zip")
             country = json.stringValue("country")
             city = json.stringValue("city")
             address = json.stringValue("address")
@@ -40,4 +55,5 @@ class ContactDetailRecord {
             return nil
         }
     }
+    
 }
