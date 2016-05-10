@@ -34,10 +34,6 @@ protocol ContactsDelegate {
     func setContacts(contacts:[ContactRecord])
     func dataAccessError(error:NSError?)
 }
-protocol GroupsDelegate {
-    func setGroups(groups:[GroupRecord])
-    func dataAccessError(error:NSError?)
-}
 protocol ContactDetailDelegate {
     func setContactGroups(groups: [GroupRecord])
     func setContactDetails(details: [ContactDetailRecord])
@@ -46,6 +42,7 @@ protocol ContactDetailDelegate {
 
 class DataAccess {
     static let sharedInstance = DataAccess()
+    private(set) var allGroups = [GroupRecord]() // Groups will be cached here.
     
     var currentGroupID: NSNumber? = nil
     private var restClient = RESTClient(apiKey: kApiKey, instanceUrl: kBaseInstanceUrl)
@@ -64,6 +61,9 @@ class DataAccess {
     func signInWithEmail(email:String, password:String, signInDelegate: SignInDelegate) {
         restClient.signInWithEmail(email, password: password) { (bSignedIn, message) in
             dispatch_async(dispatch_get_main_queue()) {
+                if bSignedIn {
+                    self.getAllGroups()
+                }
                 signInDelegate.userIsSignedInSuccess(bSignedIn, message: message)
             }
         }
@@ -192,7 +192,7 @@ class DataAccess {
             }
         }
     }
-    func getGroups(groupId:NSNumber?, resultDelegate: GroupsDelegate) {
+    private func getAllGroups() {
         restClient.callRestService(kRestGetGroups, method: .GET, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var groups = [GroupRecord]()
@@ -204,13 +204,11 @@ class DataAccess {
                     }
                 }
                 dispatch_async(dispatch_get_main_queue()) {
-                    resultDelegate.setGroups(groups)
+                    self.allGroups = groups
                 }
             }
             else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    resultDelegate.dataAccessError(restResult.error)
-                }
+                print("REST->Failed to get Groups")
             }
         }
     }

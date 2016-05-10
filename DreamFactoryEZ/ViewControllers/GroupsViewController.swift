@@ -8,14 +8,13 @@
 
 import UIKit
 
-class GroupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, GroupsDelegate {
+class GroupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     private let kCellID = "CellID"
     private let dataAccess = DataAccess.sharedInstance
 
-    private var groups = [GroupRecord]()
     var selectedGroup:GroupRecord?
     var completionClosure: ((GroupRecord?)->Void)? = nil
     
@@ -27,10 +26,8 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     override func viewDidAppear(animated: Bool) {
-        if dataAccess.isSignedIn() {
-            dataAccess.getGroups(nil, resultDelegate: self)
-        }
-        else {
+        if dataAccess.allGroups.count == 0 {
+            // Could give some visual indication
             navigationController?.popToRootViewControllerAnimated(true)
         }
     }
@@ -53,20 +50,9 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
         performSegueWithIdentifier("GroupsSegue", sender: self)
     }
     
-    // MARK: GroupsDelegate
-    func setGroups(groups: [GroupRecord]) {
-        self.groups = groups
-        self.tableView.reloadData()
-    }
-    func dataAccessError(error: NSError?) {
-        if let error = error {
-            print("Error: \(error.localizedDescription)")
-        }
-    }
-    
     // MARK: UITableViewDataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count + 1
+        return dataAccess.allGroups.count + 1
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
@@ -77,7 +63,7 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
         var cellLabel = "All Groups"
         var bIsCurrent = false
         if indexPath.row > 0 {
-            let cellGroup = groups[indexPath.row - 1]
+            let cellGroup = dataAccess.allGroups[indexPath.row - 1]
             cellLabel = cellGroup.name
             bIsCurrent = (cellGroup.id == selectedGroup?.id)
         }
@@ -96,7 +82,7 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
             selectedGroup = nil
         }
         else {
-            let group = groups[indexPath.row - 1]
+            let group = dataAccess.allGroups[indexPath.row - 1]
             selectedGroup = group
         }
         // Set select and exit
