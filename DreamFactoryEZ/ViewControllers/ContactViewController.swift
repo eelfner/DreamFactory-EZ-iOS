@@ -37,7 +37,9 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         contactSkypeLabel.text = nil
         contactTwitterLabel.text = nil
         contactNotesLabel.text = nil
+        
         configureTableView()
+        setupForView()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
     }
@@ -57,6 +59,34 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    private func setupForView() {
+        self.navigationItem.setLeftBarButtonItem(nil, animated: false);
+        
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(editSelected))
+        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+    }
+    private func setupForEdit() {
+        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(cancelSelected))
+        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveSelected))
+        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+    }
+    
+    
+    @objc func editSelected() {
+        bIsEditing = true
+        setupForEdit()
+    }
+    @objc func saveSelected() {
+        // Do Save
+        bIsEditing = false
+        setupForView()
+    }
+    @objc func cancelSelected() {
+        bIsEditing = false
+        setupForView()
+    }
+
     @objc func activityChanged(notification:NSNotification) {
         let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
         if activityCount > 0 {
