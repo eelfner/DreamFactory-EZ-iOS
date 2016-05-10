@@ -10,6 +10,8 @@ import UIKit
 
 class ContactViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactDetailDelegate {
 
+    let kEditAddressSegue = "EditAddressSegue"
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -227,7 +229,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         guard bIsEditMode else { return }
         
         if indexPath.section == 0 {
-            // TODO Segue
+            performSegueWithIdentifier(kEditAddressSegue, sender: self)
         }
         else {
             if let contact = contact {
@@ -242,7 +244,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    func userHasGroupName(groupName:String) -> Bool {
+    private func userHasGroupName(groupName:String) -> Bool {
         let bHasGroup = groups.contains({ (g) -> Bool in g.name == groupName })
         return bHasGroup
     }
