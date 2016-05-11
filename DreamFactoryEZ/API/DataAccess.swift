@@ -15,11 +15,11 @@
 import Foundation
 
 private let kApiKey = "e71ef61795613a90bd8c03f0a742bfd67365262fec4f3fec8961beee40f7d1ed"
-private let kBaseInstanceUrl = "https://df-ft-eric-elfner.enterprise.dreamfactory.com/api/v2"
-private let kRestGetAllContacts = "/db/_table/contact"
-private let kRestGetContactGroupRelationship = "/db/_table/contact_group_relationship"
-private let kRestGetGroups = "/db/_table/contact_group"
-private let kRestGetContactDetail = "/db/_table/contact_info"
+let kBaseInstanceUrl = "https://df-ft-eric-elfner.enterprise.dreamfactory.com/api/v2"
+private let kRestContact = "/db/_table/contact"
+private let kRestContactGroupRelationship = "/db/_table/contact_group_relationship"
+private let kRestGroup = "/db/_table/contact_group"
+private let kRestContactDetail = "/db/_table/contact_info"
 
 typealias GetContactsHandler = ([String], NSError?)->Void
 
@@ -98,7 +98,7 @@ class DataAccess {
         let records: JSONArray = [["contact_group_id": fromGroupId, "contact_id": contact.id]]
         let requestBody: [String: AnyObject] = ["resource": records]
 
-        restClient.callRestService(kRestGetContactGroupRelationship, method: .DELETE, queryParams: queryParams, body: requestBody) { restResult in
+        restClient.callRestService(kRestContactGroupRelationship, method: .DELETE, queryParams: queryParams, body: requestBody) { restResult in
             if restResult.bIsSuccess {
                 self.getContactDetails(contact.id, resultDelegate: resultDelegate) // Refresh
             }
@@ -113,7 +113,7 @@ class DataAccess {
     func addContact(contact: ContactRecord, toGroupId: Int, resultDelegate: ContactDetailDelegate) {
         let records: JSONArray = [["contact_group_id": toGroupId, "contact_id": contact.id]]
         let requestBody: [String: AnyObject] = ["resource": records]
-        restClient.callRestService(kRestGetContactGroupRelationship, method: .POST, queryParams: nil, body: requestBody) { restResult in
+        restClient.callRestService(kRestContactGroupRelationship, method: .POST, queryParams: nil, body: requestBody) { restResult in
             if restResult.bIsSuccess {
                 self.getContactDetails(contact.id, resultDelegate: resultDelegate) // Refresh
             }
@@ -126,10 +126,10 @@ class DataAccess {
     }
 
     func addOrUpdateAddress(detailRecord: ContactDetailRecord, delegate: DataAccessUpdateDelegate) {
-        let requestBody: JSON = ["resource" : [detailRecord.asJSON()]]
+        let requestBody: JSON = ["resource" : [detailRecord.asJSON()]] // DreamFactory REST API body with {"resource" = [ { record }, ... ] }
         let methodType: HTTPMethod = detailRecord.isNew() ? .POST : .PATCH
 
-        restClient.callRestService(kRestGetContactDetail, method: methodType, queryParams: nil, body: requestBody) { restResult in
+        restClient.callRestService(kRestContactDetail, method: methodType, queryParams: nil, body: requestBody) { restResult in
             if restResult.bIsSuccess {
                 dispatch_async(dispatch_get_main_queue()) {
                     delegate.dataAccessSuccess()
@@ -143,7 +143,7 @@ class DataAccess {
         }
     }
     func removeAddressForId(id:Int, delegate: DataAccessUpdateDelegate) {
-        restClient.callRestService(kRestGetContactDetail + "/\(id)", method: .DELETE, queryParams: nil, body: nil) { restResult in
+        restClient.callRestService(kRestContactDetail + "/\(id)", method: .DELETE, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
                 dispatch_async(dispatch_get_main_queue()) {
                     delegate.dataAccessSuccess()
@@ -159,7 +159,7 @@ class DataAccess {
     
     private func getContactDetailsInfo(contactId:Int, resultDelegate: ContactDetailDelegate) {
         let queryParams = ["filter" : "contact_id=\(contactId)"]
-        restClient.callRestService(kRestGetContactDetail, method: .GET, queryParams: queryParams, body: nil) { restResult in
+        restClient.callRestService(kRestContactDetail, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var details = [ContactDetailRecord]()
                 if let detailArray = restResult.json?["resource"] as? JSONArray {
@@ -183,7 +183,7 @@ class DataAccess {
     
     private func getContactDetailsGroups(contactId:Int, resultDelegate: ContactDetailDelegate) {
         let queryParams = ["related" : "contact_group_by_contact_group_id", "filter" : "contact_id=\(contactId)"]
-        restClient.callRestService(kRestGetContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
+        restClient.callRestService(kRestContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var groups = [GroupRecord]()
                 if let results = restResult.json?["resource"] as? JSONArray {
@@ -214,7 +214,7 @@ class DataAccess {
     // Sorting cannot be done through REST call.
     private func getContactsForGroup(groupID: NSNumber, resultDelegate: ContactsDelegate) {
         let queryParams = ["related" : "contact_by_contact_id", "filter" : "contact_group_id=\(groupID.intValue)"]
-        restClient.callRestService(kRestGetContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
+        restClient.callRestService(kRestContactGroupRelationship, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var contacts = [ContactRecord]()
                 if let results = restResult.json?["resource"] as? JSONArray {
@@ -243,7 +243,7 @@ class DataAccess {
 
     private func getContactsAll(resultDelegate: ContactsDelegate) {
         let queryParams = ["order" : "last_name asc, first_name asc"]
-        restClient.callRestService(kRestGetAllContacts, method: .GET, queryParams: queryParams, body: nil) { restResult in
+        restClient.callRestService(kRestContact, method: .GET, queryParams: queryParams, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var contacts = [ContactRecord]()
                 if let contactsArray = restResult.json?["resource"] as? JSONArray {
@@ -266,7 +266,7 @@ class DataAccess {
     }
     
     private func getAllGroups() {
-        restClient.callRestService(kRestGetGroups, method: .GET, queryParams: nil, body: nil) { restResult in
+        restClient.callRestService(kRestGroup, method: .GET, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
                 var groups = [GroupRecord]()
                 if let groupsArray = restResult.json?["resource"] as? JSONArray {

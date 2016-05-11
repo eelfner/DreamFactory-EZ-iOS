@@ -16,6 +16,7 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var serverLabel: UILabel!
     
     private let dataAccess = DataAccess.sharedInstance
     var completionClosure: (()->Void)? = nil
@@ -26,7 +27,7 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
         // Do any additional setup after loading the view.
         signInView.layer.cornerRadius = 6
         signInView.layer.masksToBounds = true
-        
+        serverLabel.text = kBaseInstanceUrl
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
     }
 

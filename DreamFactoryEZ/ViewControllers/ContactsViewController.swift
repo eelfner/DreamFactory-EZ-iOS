@@ -62,6 +62,9 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    @IBAction func ezMoreAction() {
+        // Link to GitHub
+    }
     @objc func settingsSelected() {
         // Could go to a complete Settings View, but here we just show the SignIn
         performSegueWithIdentifier(kSignInSegue, sender: self)
