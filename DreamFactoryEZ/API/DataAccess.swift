@@ -39,6 +39,10 @@ protocol ContactDetailDelegate {
     func setContactDetails(details: [ContactDetailRecord])
     func dataAccessError(error:NSError?)
 }
+protocol DataAccessUpdateDelegate {
+    func dataAccessSuccess()
+    func dataAccessError(error:NSError?)
+}
 class DataAccess {
     static let sharedInstance = DataAccess()
     private(set) var allGroups = [GroupRecord]() // Groups will be cached here.
@@ -91,12 +95,12 @@ class DataAccess {
     func removeContact(contact: ContactRecord, fromGroupId: Int, resultDelegate: ContactDetailDelegate) {
         // Do not have the ID of the record to remove, but can set id_field and remove with those.
         let queryParams: [String: AnyObject] = ["id_field": "contact_group_id,contact_id"]
-        let records: JSONArray = [["contact_group_id": fromGroupId, "contact_id": contact.id.integerValue]]
+        let records: JSONArray = [["contact_group_id": fromGroupId, "contact_id": contact.id]]
         let requestBody: [String: AnyObject] = ["resource": records]
 
         restClient.callRestService(kRestGetContactGroupRelationship, method: .DELETE, queryParams: queryParams, body: requestBody) { restResult in
             if restResult.bIsSuccess {
-                self.getContactDetails(contact.id.integerValue, resultDelegate: resultDelegate) // Refresh
+                self.getContactDetails(contact.id, resultDelegate: resultDelegate) // Refresh
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
@@ -107,11 +111,11 @@ class DataAccess {
     }
     
     func addContact(contact: ContactRecord, toGroupId: Int, resultDelegate: ContactDetailDelegate) {
-        let records: JSONArray = [["contact_group_id": toGroupId, "contact_id": contact.id.integerValue]]
+        let records: JSONArray = [["contact_group_id": toGroupId, "contact_id": contact.id]]
         let requestBody: [String: AnyObject] = ["resource": records]
         restClient.callRestService(kRestGetContactGroupRelationship, method: .POST, queryParams: nil, body: requestBody) { restResult in
             if restResult.bIsSuccess {
-                self.getContactDetails(contact.id.integerValue, resultDelegate: resultDelegate) // Refresh
+                self.getContactDetails(contact.id, resultDelegate: resultDelegate) // Refresh
             }
             else {
                 dispatch_async(dispatch_get_main_queue()) {
@@ -121,6 +125,38 @@ class DataAccess {
         }
     }
 
+    func addOrUpdateAddress(detailRecord: ContactDetailRecord, delegate: DataAccessUpdateDelegate) {
+        let requestBody: JSON = ["resource" : [detailRecord.asJSON()]]
+        let methodType: HTTPMethod = detailRecord.isNew() ? .POST : .PATCH
+
+        restClient.callRestService(kRestGetContactDetail, method: methodType, queryParams: nil, body: requestBody) { restResult in
+            if restResult.bIsSuccess {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessSuccess()
+                }
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessError(restResult.error)
+                }
+            }
+        }
+    }
+    func removeAddressForId(id:Int, delegate: DataAccessUpdateDelegate) {
+        restClient.callRestService(kRestGetContactDetail + "/\(id)", method: .DELETE, queryParams: nil, body: nil) { restResult in
+            if restResult.bIsSuccess {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessSuccess()
+                }
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessError(restResult.error)
+                }
+            }
+        }
+    }
+    
     private func getContactDetailsInfo(contactId:Int, resultDelegate: ContactDetailDelegate) {
         let queryParams = ["filter" : "contact_id=\(contactId)"]
         restClient.callRestService(kRestGetContactDetail, method: .GET, queryParams: queryParams, body: nil) { restResult in
@@ -241,6 +277,9 @@ class DataAccess {
                     }
                 }
                 dispatch_async(dispatch_get_main_queue()) {
+                    groups.sortInPlace({ (r1, r2) -> Bool in
+                        r1.name < r2.name
+                    })
                     self.allGroups = groups
                 }
             }

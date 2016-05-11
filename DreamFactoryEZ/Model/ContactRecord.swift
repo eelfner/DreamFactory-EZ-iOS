@@ -10,7 +10,7 @@
 import UIKit
 
 class ContactRecord: Equatable {
-    var id: NSNumber
+    var id: Int
     var firstName: String
     var lastName: String
     var notes: String
@@ -24,7 +24,7 @@ class ContactRecord: Equatable {
     
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber {
-            id = _id
+            id = _id.integerValue
             firstName = json.stringValue("first_name")
             lastName = json.stringValue("last_name")
             notes = json.stringValue("notes")
@@ -49,5 +49,5 @@ class ContactRecord: Equatable {
 }
 
 func ==(lhs: ContactRecord, rhs: ContactRecord) -> Bool {
-    return lhs.id.isEqualToNumber(rhs.id)
+    return lhs.id == rhs.id
 }

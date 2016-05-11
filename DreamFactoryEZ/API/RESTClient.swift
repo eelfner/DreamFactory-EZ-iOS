@@ -48,7 +48,7 @@ enum RestCallResult {
     }
 }
 
-enum HTTPMethod: String { case GET, POST, PUT, DELETE }
+enum HTTPMethod: String { case GET, POST, PATCH, DELETE }
 
 class RESTClient {
     private let kRestRegister = "/user/register"
@@ -104,7 +104,7 @@ class RESTClient {
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
         config.HTTPAdditionalHeaders = sessionHeaderParams()
         let session = NSURLSession(configuration: config)
-        print("REST->\(request.pathAndQuery())")
+        print("REST(\(method.rawValue))->\(request.pathAndQuery())")
         
         let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
             self.callCountIncrement(false)

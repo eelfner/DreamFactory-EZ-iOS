@@ -121,6 +121,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // MARK: ContactsDelegate
+    
     func setContacts(contacts: [ContactRecord]) {
         self.contacts = contacts
         contactsSectionsAlpha = [String]()
@@ -142,12 +143,15 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.setContentOffset(CGPointZero, animated: true)
         tableView.reloadData()
     }
+    
     func dataAccessError(error: NSError?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
         }
     }
+    
     // MARK: - UISearchBarDelegate
+    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
         if searchText.isEmpty {
@@ -168,6 +172,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     // MARK: UITableViewDataSource
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if bIsSearching {
             return 1
@@ -187,6 +192,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         return rowCount
     }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
         
@@ -200,6 +206,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         cell!.textLabel?.text = contactName
         return cell!
     }
+    
     private func contactForIndexPath(indexPath:NSIndexPath) -> ContactRecord? {
         var contact:ContactRecord? = nil
         if bIsSearching {
@@ -215,6 +222,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // MARK: - UITableViewDelegate
+    
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if bIsSearching {
             return nil
@@ -231,14 +239,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         view.tintColor = UIColor(red: 210/255.0, green: 225/255.0, blue: 239/255.0, alpha: 1.0)
     }
-    
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        let record = recordForIndexPath(indexPath)
-//        self.navBar.disableAllTouch()
-//        
-//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//        showContactViewControllerForRecord(record)
-//    }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
 //        if editingStyle == .Delete {

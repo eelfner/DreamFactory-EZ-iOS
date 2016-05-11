@@ -51,7 +51,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidAppear(animated: Bool) {
         if dataAccess.isSignedIn() {
             updateContact()
-            if let id = contact?.id as? Int {
+            if let id = contact?.id {
                 dataAccess.getContactDetails(id, resultDelegate: self)
             }
         }
@@ -79,8 +79,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     private func setupForEdit() {
         bIsEditMode = true
-        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(cancelSelected))
-        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
+        self.navigationItem.setLeftBarButtonItem(nil, animated: false);
         let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(saveSelected))
         self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
         
@@ -172,7 +171,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return details.count
+        case 0: return bIsEditMode ? details.count + 1 : details.count
         case 1: return bIsEditMode ? dataAccess.allGroups.count : groups.count
         default: return 0
         }
@@ -191,10 +190,18 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             cell = DetailTableViewCell(style: .Default, reuseIdentifier: kAddressCell)
         }
         if let cell = cell as? DetailTableViewCell {
+            if iDetail == details.count {
+                // Edit mode, new Address
+                cell.typeLabel.text = "NEW"
+                cell.addressLabel.text = "(Add new Address)"
+                cell.accessoryType = .DisclosureIndicator
+            }
+            else {
             let detail = details[iDetail]
-            cell.typeLabel.text = detail.type
-            cell.addressLabel.text = detail.description
-            cell.accessoryType = bIsEditMode ? .DisclosureIndicator : .None
+                cell.typeLabel.text = detail.type
+                cell.addressLabel.text = detail.description
+                cell.accessoryType = bIsEditMode ? .DisclosureIndicator : .None
+            }
         }
         
         return cell!
@@ -212,7 +219,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         else {
             cell?.textLabel?.text = groups[iGroup].name
-            cell?.accessoryType = .None
+            cell?.accessoryType = .Checkmark
         }
         return cell!
     }
@@ -236,10 +243,10 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
                 let selectedGroup = dataAccess.allGroups[indexPath.row]
                 let bHasGroup = userHasGroupName(selectedGroup.name)
                 if bHasGroup {
-                    dataAccess.removeContact(contact, fromGroupId: selectedGroup.id.integerValue, resultDelegate: self)
+                    dataAccess.removeContact(contact, fromGroupId: selectedGroup.id, resultDelegate: self)
                 }
                 else {
-                    dataAccess.addContact(contact, toGroupId: selectedGroup.id.integerValue, resultDelegate: self)
+                    dataAccess.addContact(contact, toGroupId: selectedGroup.id, resultDelegate: self)
                 }
             }
         }
@@ -247,6 +254,24 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     private func userHasGroupName(groupName:String) -> Bool {
         let bHasGroup = groups.contains({ (g) -> Bool in g.name == groupName })
         return bHasGroup
+    }
+    
+    // MARK: Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == kEditAddressSegue {
+            if let vc = segue.destinationViewController as? AddressEditViewController {
+                if let contact = contact, row = tableView.indexPathForSelectedRow?.row {
+                    vc.contact = contact
+                    vc.contactDetailDelegate = self
+                    if row == details.count {
+                        vc.address = ContactDetailRecord(contactId: contact.id)
+                    }
+                    else {
+                        vc.address = details[row]
+                    }
+                }
+            }
+        }
     }
 }
 

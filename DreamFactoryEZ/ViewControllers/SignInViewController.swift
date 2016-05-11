@@ -121,6 +121,7 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     
     
     // MARK: - SignInDelegate
+    
     func userIsSignedInSuccess(bSignedIn: Bool, message: String?) {
         if bSignedIn {
             self.completionClosure?()
@@ -134,17 +135,8 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
             updateViewForSignedInState(false)
         }
     }
+    
     func userIsSignedOut() {
         updateViewForSignedInState(false)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

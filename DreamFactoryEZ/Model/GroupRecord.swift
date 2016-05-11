@@ -10,13 +10,13 @@
 import UIKit
 
 class GroupRecord {
-    let id: NSNumber
+    let id: Int
     var name: String
     
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber,
             let _name = json["name"] as? String {
-            id = _id
+            id = _id.integerValue
             name = _name
         }
         else {

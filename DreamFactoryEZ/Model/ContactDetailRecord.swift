@@ -9,8 +9,8 @@
 import UIKit
 
 class ContactDetailRecord: CustomStringConvertible {
-    var id: NSNumber
-    var contactId: NSNumber
+    var id: Int
+    var contactId: Int
     var type: String
     var phone: String
     var email: String
@@ -34,12 +34,23 @@ class ContactDetailRecord: CustomStringConvertible {
         }
         return d
     }
-    
+    init(contactId:Int) {
+        id = -1
+        self.contactId = contactId
+        type = "Work"
+        phone = ""
+        email = ""
+        state = ""
+        zipCode = ""
+        country = ""
+        city = ""
+        address = ""
+    }
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber,
          let _contactId = json["contact_id"] as? NSNumber {
-            id = _id
-            contactId = _contactId
+            id = _id.integerValue
+            contactId = _contactId.integerValue
             
             type = json.stringValue("info_type").uppercaseString
             phone = json.stringValue("phone")
@@ -55,5 +66,23 @@ class ContactDetailRecord: CustomStringConvertible {
             return nil
         }
     }
-    
+    func asJSON() -> JSON {
+        var json = ["id": id,
+                    "contact_id": contactId,
+                    "info_type": type.lowercaseString,
+                    "phone": phone,
+                    "email": email,
+                    "address": address,
+                    "city": city,
+                    "state": state,
+                    "zip": zipCode,
+                    "country": country] as JSON
+        if isNew() {
+            json.removeValueForKey("id")
+        }
+        return json
+    }
+    func isNew() -> Bool {
+        return id == -1
+    }
 }

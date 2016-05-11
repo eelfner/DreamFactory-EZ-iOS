@@ -14,6 +14,7 @@
 		B63E30771CD91FDA00842E68 /* DreamFactoryEZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */; };
 		B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */; };
 		B65C72C31CE14A5100BA5E5B /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72C21CE14A5100BA5E5B /* DetailTableViewCell.swift */; };
+		B66D0C201CE29DA900331B30 /* AddressEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66D0C1F1CE29DA900331B30 /* AddressEditViewController.swift */; };
 		B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */; };
 		B6BE3C1D1CDA661E00B15BEB /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */; };
 		B6BE3C201CDA665C00B15BEB /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1F1CDA665C00B15BEB /* RESTClient.swift */; };
@@ -47,6 +48,7 @@
 		B63E30781CD91FDA00842E68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		B65C72C21CE14A5100BA5E5B /* DetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
+		B66D0C1F1CE29DA900331B30 /* AddressEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressEditViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		B6BE3C1F1CDA665C00B15BEB /* RESTClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
@@ -97,15 +99,15 @@
 		B63E30601CD91FD900842E68 /* DreamFactoryEZ */ = {
 			isa = PBXGroup;
 			children = (
+				B63E30611CD91FD900842E68 /* AppDelegate.swift */,
+				B63E30681CD91FDA00842E68 /* Assets.xcassets */,
+				B63E306D1CD91FDA00842E68 /* Info.plist */,
+				B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */,
+				B63E30651CD91FDA00842E68 /* Main.storyboard */,
 				B65C72C11CE14A1800BA5E5B /* Views */,
 				B6BE3C231CDA66A500B15BEB /* Model */,
 				B6BE3C1E1CDA663600B15BEB /* API */,
 				B6BE3C191CDA65E200B15BEB /* ViewControllers */,
-				B63E30611CD91FD900842E68 /* AppDelegate.swift */,
-				B63E30651CD91FDA00842E68 /* Main.storyboard */,
-				B63E30681CD91FDA00842E68 /* Assets.xcassets */,
-				B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */,
-				B63E306D1CD91FDA00842E68 /* Info.plist */,
 			);
 			path = DreamFactoryEZ;
 			sourceTree = "<group>";
@@ -130,6 +132,7 @@
 		B6BE3C191CDA65E200B15BEB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B66D0C1F1CE29DA900331B30 /* AddressEditViewController.swift */,
 				B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */,
 				B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */,
 				B6FCB6DF1CDBDB6000E1728C /* GroupsViewController.swift */,
@@ -263,6 +266,7 @@
 				B63E30621CD91FD900842E68 /* AppDelegate.swift in Sources */,
 				B6BE3C201CDA665C00B15BEB /* RESTClient.swift in Sources */,
 				B6BE3C271CDA66A500B15BEB /* ContactDetailRecord.swift in Sources */,
+				B66D0C201CE29DA900331B30 /* AddressEditViewController.swift in Sources */,
 				B6FCB6E01CDBDB6000E1728C /* GroupsViewController.swift in Sources */,
 				B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */,
 				B65C72C31CE14A5100BA5E5B /* DetailTableViewCell.swift in Sources */,
