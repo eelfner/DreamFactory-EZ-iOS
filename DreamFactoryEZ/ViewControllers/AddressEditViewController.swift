@@ -49,6 +49,7 @@ class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, 
     @objc private func saveSelected() {
         if let contact = contact {
             let addressRecord = ContactDetailRecord(contactId: contact.id)
+            addressRecord.id = address?.id ?? -1
             addressRecord.address = addressTextField.text ?? ""
             addressRecord.city = cityTextField.text ?? ""
             addressRecord.country = countryTextField.text ?? ""
