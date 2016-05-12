@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol GroupDependent {
-    func resetCurrentGroupTo(group:NSNumber?)
-}
-
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate, ContactUpdateDelegate, UISearchBarDelegate {
     let kGroupsSegue = "GroupsSegue"
     let kSignInSegue = "SignInSegue"

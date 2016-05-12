@@ -65,7 +65,9 @@ class DataAccess {
     func isSignedIn() -> Bool {
         return restClient.isSignedIn
     }
-    
+    func signedInUser() -> String? {
+        return restClient.sessionEmail
+    }
     func registerWithEmail(email:String, password:String, registrationDelegate: RegistrationDelegate) {
         restClient.registerWithEmail(email, password: password) { (bSuccess, message) in
             dispatch_async(dispatch_get_main_queue()) {

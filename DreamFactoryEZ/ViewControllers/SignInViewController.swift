@@ -54,16 +54,20 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     
     func updateViewForSignedInState(bIsSignedIn:Bool) {
         if bIsSignedIn {
+            emailTextField.text = dataAccess.signedInUser()
             emailTextField.enabled = false
             emailTextField.backgroundColor = UIColor.grayColor()
+            passwordTextField.text = nil
             passwordTextField.enabled = false
             passwordTextField.backgroundColor = UIColor.grayColor()
             signInButton.setTitle("Sign Out", forState: .Normal)
             registerButton.hidden = true
         }
         else {
+            emailTextField.text = "user1@zcage.com"
             emailTextField.enabled = true
             emailTextField.backgroundColor = UIColor.whiteColor()
+            passwordTextField.text = "password"
             passwordTextField.enabled = true
             passwordTextField.backgroundColor = UIColor.whiteColor()
             signInButton.setTitle("Sign In", forState: .Normal)
@@ -95,9 +99,12 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     func registerEmail(email:String, pwd:String) {
         dataAccess.registerWithEmail(email, password: pwd, registrationDelegate: self)
     }
+    
     // MARK: - RegisterDelegate
+    
     func userIsRegisteredSuccess(bSuccess:Bool, message: String?) {
         if bSuccess {
+            self.completionClosure?()
             self.navigationController?.popViewControllerAnimated(true)
         }
         else {
@@ -119,7 +126,6 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
             dataAccess.signInWithEmail(email, password: pwd, signInDelegate: self)
         }
     }
-    
     
     // MARK: - SignInDelegate
     

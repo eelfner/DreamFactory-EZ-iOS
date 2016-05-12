@@ -16,12 +16,6 @@ import Foundation
 
 let kRESTServerActiveCountUpdated = "kRESTServerActiveCountUpdated"
 
-// For Testing can use expired token with presets in RESTClient
-//let kExpiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsInVzZXJfaWQiOjIsImVtYWlsIjoidXNlcjFAemNhZ2UuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9kZi1mdC1lcmljLWVsZm5lci5lbnRlcnByaXNlLmRyZWFtZmFjdG9yeS5jb21cL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NjI1NzA2NjEsImV4cCI6MTQ2MjU3NDI2MSwibmJmIjoxNDYyNTcwNjYxLCJqdGkiOiJkYjcyZjUxNWUxN2RiZTdlZWVjMDExNzliZGY2NTJhMiJ9.0NsO64trg3WgTh2-AUwSPhhz2XqSiXf5DXJVgHeH73Q"
-//var sessionToken: String? = kExpiredToken
-//var sessionEmail: String? = "user1@zcage.com" // Valid user
-//var sessionPwd: String? = "password" // Valid password
-
 typealias SuccessHandler = (Bool, String?)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
@@ -69,25 +63,36 @@ class RESTClient {
         self.apiKey = apiKey
         self.baseInstanceUrl = instanceUrl
     }
-    var sessionToken: String? = nil
-    var sessionEmail: String? = nil
-    var sessionPwd: String? = nil
+    private var sessionToken: String? = nil
+    private(set) var sessionEmail: String? = nil
+    private var sessionPwd: String? = nil
 
     var isSignedIn: Bool {
         return (sessionToken != nil)
     }
     func signOut() {
         sessionToken = nil
+        sessionEmail = nil
+        sessionPwd = nil
+        
+        // For Testing can use expired token with presets in RESTClient
+        let kExpiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsInVzZXJfaWQiOjIsImVtYWlsIjoidXNlcjFAemNhZ2UuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9kZi1mdC1lcmljLWVsZm5lci5lbnRlcnByaXNlLmRyZWFtZmFjdG9yeS5jb21cL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NjI1NzA2NjEsImV4cCI6MTQ2MjU3NDI2MSwibmJmIjoxNDYyNTcwNjYxLCJqdGkiOiJkYjcyZjUxNWUxN2RiZTdlZWVjMDExNzliZGY2NTJhMiJ9.0NsO64trg3WgTh2-AUwSPhhz2XqSiXf5DXJVgHeH73Q"
+        sessionToken = kExpiredToken
+        sessionEmail = "user1@zcage.com" // Valid user
+        sessionPwd = "password" // Valid password
+
     }
     
     func registerWithEmail(email:String, password:String, registrationSuccessHandler: SuccessHandler) {
         let requestData = ["email" : email, "password" : password]
         
         callRestService(kRestRegister, method: .POST, queryParams: nil, body: requestData) { (callResult) in
-            if callResult.bIsSuccess {
+            if callResult.bIsSuccess { // If configured for immediate registration, can go ahead and signin.
                 self.signInWithEmail(email, password: password, signInHandler: registrationSuccessHandler)
             }
-            registrationSuccessHandler(false, callResult.error?.localizedDescription)
+            else {
+                registrationSuccessHandler(false, callResult.error?.localizedDescription)
+            }
         }
     }
     
@@ -97,6 +102,7 @@ class RESTClient {
         callRestService(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in
             var bSuccess = false
             if callResult.bIsSuccess {
+                self.sessionPwd = password
                 bSuccess = self.setUserDataFromJson(callResult.json)
             }
             signInHandler(bSuccess, callResult.error?.localizedDescription)
@@ -174,11 +180,13 @@ class RESTClient {
         }
     }
     
+    
+    
     private func setUserDataFromJson(signInJson:JSON?) -> Bool {
         if let signInJson = signInJson {
+            // elements: session_token, email, last_name, role_id, session_id, role, last_login_date, is_sys_admin, host, name, id
             sessionToken = signInJson["session_token"] as? String
-            sessionEmail = signInJson["user_email"] as? String
-            sessionPwd = signInJson["user_passwor"] as? String
+            sessionEmail = signInJson["email"] as? String
         }
         else {
             sessionToken = nil
