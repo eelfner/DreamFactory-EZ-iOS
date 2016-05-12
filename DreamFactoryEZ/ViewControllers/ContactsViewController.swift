@@ -12,10 +12,12 @@ protocol GroupDependent {
     func resetCurrentGroupTo(group:NSNumber?)
 }
 
-class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate, UISearchBarDelegate {
+class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactsDelegate, ContactUpdateDelegate, UISearchBarDelegate {
     let kGroupsSegue = "GroupsSegue"
     let kSignInSegue = "SignInSegue"
     let kDetailSegue = "DetailSegue"
+    let kNewContactSegue = "NewContactSegue"
+    let kViewNewContactSegue = "ViewNewContactSegue"
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -31,6 +33,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
 
     private var currentGroup:GroupRecord? = nil
     private var bIsSearching = false
+    private var newlyAddedContact:ContactRecord?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +56,9 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         if !dataAccess.isSignedIn() {
             performSegueWithIdentifier(kSignInSegue, sender: self)
         }
+        else if newlyAddedContact != nil {
+            performSegueWithIdentifier(kViewNewContactSegue, sender: self)
+        }
         else {
             tableView.reloadData()
         }
@@ -71,6 +77,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addSelected() {
+        performSegueWithIdentifier(kNewContactSegue, sender: self)
     }
     
     @objc func activityChanged(notification:NSNotification) {
@@ -121,6 +128,21 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             }
         }
+        else if segue.identifier == kNewContactSegue {
+            if let vc = segue.destinationViewController as? ContactEditViewController {
+                let contact = ContactRecord()
+                vc.contact = contact
+                vc.updatedContactDelegate = self
+            }
+        }
+        else if segue.identifier == kViewNewContactSegue {
+            if let vc = segue.destinationViewController as? ContactViewController {
+                if let contact = newlyAddedContact {
+                    vc.contact = contact
+                    newlyAddedContact = nil
+                }
+            }
+        }
     }
     
     // MARK: ContactsDelegate
@@ -145,6 +167,12 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         tableView.setContentOffset(CGPointZero, animated: true)
         tableView.reloadData()
+    }
+    
+    // MARK: ContactUpdateDelegate
+    
+    func setContact(contact: ContactRecord) {
+        newlyAddedContact = contact
     }
     
     func dataAccessError(error: NSError?) {

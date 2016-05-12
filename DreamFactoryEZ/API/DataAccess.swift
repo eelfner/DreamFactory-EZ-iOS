@@ -30,6 +30,10 @@ protocol SignInDelegate {
     func userIsSignedInSuccess(bSignedIn:Bool, message:String?)
     func userIsSignedOut()
 }
+protocol ContactUpdateDelegate {
+    func setContact(contact:ContactRecord)
+    func dataAccessError(error:NSError?)
+}
 protocol ContactsDelegate {
     func setContacts(contacts:[ContactRecord])
     func dataAccessError(error:NSError?)
@@ -78,6 +82,28 @@ class DataAccess {
         }
     }
     
+    func getContact(id:Int, resultDelegate: ContactUpdateDelegate) {
+        restClient.callRestService(kRestContact + "/\(id)", method: .GET, queryParams: nil, body: nil) { restResult in
+            var contact:ContactRecord?
+            if restResult.bIsSuccess {
+                if let contactJson = restResult.json {
+                    contact = ContactRecord(json:contactJson)
+                }
+            }
+            if let contact = contact {
+                dispatch_async(dispatch_get_main_queue()) {
+                    resultDelegate.setContact(contact)
+                }
+            }
+            else {
+                let error = restResult.error ?? NSError(domain: "DreamFactory API", code: 500, userInfo: ["TODOKEY" : "Could not create Contact from API result."])
+                dispatch_async(dispatch_get_main_queue()) {
+                    resultDelegate.dataAccessError(error)
+                }
+            }
+        }
+    }
+    
     func getContacts(group:GroupRecord?, resultDelegate: ContactsDelegate) {
         if let groupId = group?.id {
             getContactsForGroup(groupId, resultDelegate: resultDelegate)
@@ -109,7 +135,28 @@ class DataAccess {
             }
         }
     }
-    
+    func addOrUpdateContact(contactRecord: ContactRecord, delegate: ContactUpdateDelegate) {
+        let requestBody: JSON = ["resource" : [contactRecord.asJSON()]] // DreamFactory REST API body with {"resource" = [ { record }, ... ] }
+        let methodType: HTTPMethod = contactRecord.isNew() ? .POST : .PATCH
+        
+        restClient.callRestService(kRestContact, method: methodType, queryParams: nil, body: requestBody) { restResult in
+            if restResult.bIsSuccess {
+                if let resultArray = restResult.json?["resource"] as? JSONArray {
+                    if resultArray.count == 1 {
+                        if let idNum = resultArray[0]["id"] as? NSNumber {
+                            self.getContact(idNum.integerValue, resultDelegate: delegate)
+                        }
+                    }
+                }
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessError(restResult.error)
+                }
+            }
+        }
+    }
+
     func addContact(contact: ContactRecord, toGroupId: Int, resultDelegate: ContactDetailDelegate) {
         let records: JSONArray = [["contact_group_id": toGroupId, "contact_id": contact.id]]
         let requestBody: [String: AnyObject] = ["resource": records]

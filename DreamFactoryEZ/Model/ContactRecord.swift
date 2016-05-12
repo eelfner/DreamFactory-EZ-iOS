@@ -21,7 +21,14 @@ class ContactRecord: Equatable {
     var fullName: String {
         return "\(lastName), \(firstName)"
     }
-    
+    init() {
+        id = -1
+        firstName = ""
+        lastName = ""
+        notes = ""
+        skype = ""
+        twitter = ""
+    }
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber {
             id = _id.integerValue
@@ -44,6 +51,24 @@ class ContactRecord: Equatable {
             }
         }
         return contacts
+    }
+    func asJSON() -> JSON {
+        var json = ["id": id,
+                    "first_name": firstName,
+                    "last_name": lastName,
+                    "notes": notes,
+                    "skype": skype,
+                    "twitter": twitter] as JSON
+        if let imageURL = imageURL {
+            json["image_url"] = imageURL
+        }
+        if isNew() {
+            json.removeValueForKey("id")
+        }
+        return json
+    }
+    func isNew() -> Bool {
+        return id == -1
     }
 
 }

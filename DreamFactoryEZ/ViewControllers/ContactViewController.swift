@@ -8,9 +8,10 @@
 
 import UIKit
 
-class ContactViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactDetailDelegate {
+class ContactViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ContactDetailDelegate, ContactUpdateDelegate {
 
     let kEditAddressSegue = "EditAddressSegue"
+    let kEditContactSegue = "EditContactSegue"
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -21,8 +22,8 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var contactTwitterLabel: UILabel!
     @IBOutlet weak var contactNotesLabel: UILabel!
     
-    @IBOutlet weak var editImageButton: UILabel!
-    @IBOutlet weak var editNameButton: UILabel!
+    @IBOutlet weak var editImageButton: UIButton!
+    @IBOutlet weak var editNameButton: UIButton!
     
     private let kAddressCell = "AddressCell"
     private let kGroupCell = "GroupCell"
@@ -47,6 +48,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         setupForView()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+        
     }
     override func viewDidAppear(animated: Bool) {
         if dataAccess.isSignedIn() {
@@ -112,6 +114,11 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
 
+    @IBAction func editAction() {
+        performSegueWithIdentifier(kEditContactSegue, sender: self)
+    }
+    @IBAction func editImageAction() {
+    }
     private func updateContact() {
         contactImageView.image = UIImage(named: "default_portrait")
         contactFullNameLabel.text = contact?.fullName
@@ -151,6 +158,14 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         //self.tableView.reloadSections(NSIndexSet(), withRowAnimation: .Fade)
         self.tableView.reloadData()
     }
+    
+    // MARK: ContactUpdateDelegate
+    
+    func setContact(contact:ContactRecord) {
+        self.contact = contact
+        updateContact()
+    }
+
     func dataAccessError(error: NSError?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
@@ -269,6 +284,14 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
                     else {
                         vc.address = details[row]
                     }
+                }
+            }
+        }
+        else if segue.identifier == kEditContactSegue {
+            if let vc = segue.destinationViewController as? ContactEditViewController {
+                if let contact = contact {
+                    vc.contact = contact
+                    vc.updatedContactDelegate = self
                 }
             }
         }
