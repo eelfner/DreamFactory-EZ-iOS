@@ -10,7 +10,6 @@
 		B63E30621CD91FD900842E68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30611CD91FD900842E68 /* AppDelegate.swift */; };
 		B63E30671CD91FDA00842E68 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63E30651CD91FDA00842E68 /* Main.storyboard */; };
 		B63E30691CD91FDA00842E68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B63E30681CD91FDA00842E68 /* Assets.xcassets */; };
-		B63E306C1CD91FDA00842E68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */; };
 		B63E30771CD91FDA00842E68 /* DreamFactoryEZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */; };
 		B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */; };
 		B65C72C31CE14A5100BA5E5B /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72C21CE14A5100BA5E5B /* DetailTableViewCell.swift */; };
@@ -42,7 +41,6 @@
 		B63E30611CD91FD900842E68 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B63E30661CD91FDA00842E68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B63E30681CD91FDA00842E68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B63E306B1CD91FDA00842E68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B63E306D1CD91FDA00842E68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B63E30721CD91FDA00842E68 /* DreamFactoryEZTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DreamFactoryEZTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B63E30761CD91FDA00842E68 /* DreamFactoryEZTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DreamFactoryEZTests.swift; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 				B63E30611CD91FD900842E68 /* AppDelegate.swift */,
 				B63E30681CD91FDA00842E68 /* Assets.xcassets */,
 				B63E306D1CD91FDA00842E68 /* Info.plist */,
-				B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */,
 				B63E30651CD91FDA00842E68 /* Main.storyboard */,
 				B65C72C11CE14A1800BA5E5B /* Views */,
 				B6BE3C231CDA66A500B15BEB /* Model */,
@@ -245,7 +242,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B63E306C1CD91FDA00842E68 /* LaunchScreen.storyboard in Resources */,
 				B63E30691CD91FDA00842E68 /* Assets.xcassets in Resources */,
 				B63E30671CD91FDA00842E68 /* Main.storyboard in Resources */,
 			);
@@ -307,14 +303,6 @@
 				B63E30661CD91FDA00842E68 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		B63E306A1CD91FDA00842E68 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B63E306B1CD91FDA00842E68 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -409,6 +397,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = DreamFactoryEZ/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zcage.DreamFactoryEZ;
@@ -420,6 +409,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = DreamFactoryEZ/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zcage.DreamFactoryEZ;

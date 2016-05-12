@@ -232,7 +232,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.89326923076923082" green="0.89326923076923082" blue="0.89326923076923082" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.36470588235294116" green="0.50196078431372548" blue="0.65098039215686276" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="CEc-RP-CD0"/>
                                     <constraint firstItem="8uM-TR-n3m" firstAttribute="centerX" secondItem="O6N-q5-wrG" secondAttribute="centerX" id="N3d-CX-wSW"/>
@@ -459,7 +459,7 @@
                                     <constraint firstItem="JJ8-6W-P1O" firstAttribute="centerX" secondItem="zps-uP-yvX" secondAttribute="centerX" id="SVE-km-QSI"/>
                                     <constraint firstItem="Ovq-EH-5O1" firstAttribute="top" secondItem="Was-JH-bV0" secondAttribute="bottom" constant="11" id="XRf-YJ-vRI"/>
                                     <constraint firstItem="JJ8-6W-P1O" firstAttribute="centerY" secondItem="zps-uP-yvX" secondAttribute="centerY" id="YHY-rs-N6M"/>
-                                    <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="A4f-Lq-qvL" secondAttribute="trailing" constant="8" id="aIr-mf-wSy"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="A4f-Lq-qvL" secondAttribute="trailing" constant="8" id="aIr-mf-wSy"/>
                                     <constraint firstItem="bNH-kQ-qVY" firstAttribute="top" secondItem="yOg-pR-8xU" secondAttribute="bottom" constant="5" id="apn-T4-A8h"/>
                                     <constraint firstItem="yOg-pR-8xU" firstAttribute="top" secondItem="zps-uP-yvX" secondAttribute="top" constant="8" id="fkG-dE-Wdf"/>
                                     <constraint firstAttribute="bottom" secondItem="2ar-q0-DsU" secondAttribute="bottom" constant="8" id="jtg-1v-uV5"/>
@@ -507,6 +507,7 @@ Country</string>
                                             <constraints>
                                                 <constraint firstItem="FeR-RI-iNk" firstAttribute="leading" secondItem="mXd-zP-50M" secondAttribute="trailing" constant="8" id="8Kp-2Z-4Nt"/>
                                                 <constraint firstItem="FeR-RI-iNk" firstAttribute="top" secondItem="PKv-BM-yhH" secondAttribute="top" constant="4" id="8cR-qL-2jk"/>
+                                                <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="mXd-zP-50M" secondAttribute="bottom" priority="750" constant="10" id="ZRD-OK-oFb"/>
                                                 <constraint firstItem="mXd-zP-50M" firstAttribute="leading" secondItem="PKv-BM-yhH" secondAttribute="leadingMargin" id="cGd-IB-UV2"/>
                                                 <constraint firstItem="mXd-zP-50M" firstAttribute="top" secondItem="PKv-BM-yhH" secondAttribute="topMargin" constant="-4" id="fbx-xw-dFG"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="FeR-RI-iNk" secondAttribute="bottom" constant="4" id="i4U-hT-jJm"/>
@@ -965,7 +966,7 @@ Country</string>
         <image name="EZmore" width="80" height="80"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5fS-Dj-Vr4"/>
         <segue reference="Ejg-Vz-DJ6"/>
+        <segue reference="uYT-de-eWz"/>
     </inferredMetricsTieBreakers>
 </document>
