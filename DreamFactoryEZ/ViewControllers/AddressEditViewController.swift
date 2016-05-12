@@ -30,8 +30,6 @@ class AddressEditViewController: UIViewController, DataAccessUpdateDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-//    	    let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(cancelSelected))
-//        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
         let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveSelected))
         self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
     }
@@ -48,9 +46,6 @@ class AddressEditViewController: UIViewController, DataAccessUpdateDelegate {
         }
     }
     
-//    @objc private func cancelSelected() {
-    //        navigationController?.popViewControllerAnimated(true)
-    //    }
     @objc private func saveSelected() {
         if let contact = contact {
             let addressRecord = ContactDetailRecord(contactId: contact.id)
