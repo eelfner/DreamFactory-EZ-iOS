@@ -144,38 +144,24 @@ class DataAccess {
         }
     }
     
-    func removeContactForId(id:Int, delegate: ContactDeleteDelegate) {
+    func removeContactForId(id:Int, delegate:ContactDeleteDelegate) {
+        let filterQueryParams: [String: AnyObject] = ["filter": "contact_id=\(id)"]
+        var calls = [RestCall]()
+        calls.append(RestCall(url: kRestContactGroupRelationship, method: .DELETE, queryParams: filterQueryParams, body: nil))
+        calls.append(RestCall(url: kRestContactDetail, method: .DELETE, queryParams: filterQueryParams, body: nil))
+        calls.append(RestCall(url: kRestContact + "/\(id)", method: .DELETE, queryParams: nil, body: nil))
         
-        removeContactRelationWithContactId(id) { restResult in
-            if !restResult.bIsSuccess {
-                dispatch_async(dispatch_get_main_queue()) {
-                    delegate.dataAccessError(restResult.error)
+        restClient.callRestServiceChain(calls, index: 0) { restResult in
+            dispatch_async(dispatch_get_main_queue()) {
+                if restResult.bIsSuccess {
+                    delegate.contactDeleteSuccess()
                 }
-            }
-            else {
-                self.removeContactInfoWithContactId(id)  { restResult in
-                    if !restResult.bIsSuccess {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            delegate.dataAccessError(restResult.error)
-                        }
-                    }
-                    else {
-                        self.removeContactFromTableForId(id) { restResult in
-                            dispatch_async(dispatch_get_main_queue()) {
-                                if !restResult.bIsSuccess {
-                                    delegate.dataAccessError(restResult.error)
-                                }
-                                else {
-                                    delegate.contactDeleteSuccess()
-                                }
-                            }
-                        }
-                    }
+                else {
+                    delegate.dataAccessError(restResult.error)
                 }
             }
         }
     }
-    
     private func removeContactFromTableForId(id: Int, resultClosure: RestResultClosure) {
         restClient.callRestService(kRestContact + "/\(id)", method: .DELETE, queryParams: nil, body: nil, resultClosure: resultClosure)
     }

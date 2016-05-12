@@ -49,6 +49,12 @@ enum RestCallResult {
         }
     }
 }
+struct RestCall {
+    var url: String
+    var method: HTTPMethod
+    var queryParams: JSON?
+    var body: JSON?
+}
 
 enum HTTPMethod: String { case GET, POST, PATCH, DELETE }
 
@@ -97,6 +103,25 @@ class RESTClient {
         }
     }
 
+    func callRestServiceChain(chain: [RestCall], index: Int, resultClosure: RestResultClosure) {
+        if index < chain.count {
+        let restCall = chain[index]
+            callRestService(restCall.url, method: restCall.method, queryParams: restCall.queryParams, body: restCall.body) { restResult in
+                if restResult.bIsSuccess {
+                    let bMoreItems = index < chain.count - 1
+                    if bMoreItems {
+                        self.callRestServiceChain(chain, index: index + 1, resultClosure: resultClosure)
+                    }
+                    else { // send back success
+                        resultClosure(restResult)
+                    }
+                }
+                else { // Send back first error
+                    resultClosure(restResult)
+                }
+            }
+        }
+    }
     func callRestService(relativePath: String, method:HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?, resultClosure:RestResultClosure) {
         
         let path = baseInstanceUrl + relativePath
