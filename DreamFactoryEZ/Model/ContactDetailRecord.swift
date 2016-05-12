@@ -4,6 +4,7 @@
 //
 //  Created by Timur Umayev on 1/4/16.
 //  Copyright © 2016 dreamfactory. All rights reserved.
+//
 //  Refactored by Eric Elfner 2016-05-04
 
 import UIKit

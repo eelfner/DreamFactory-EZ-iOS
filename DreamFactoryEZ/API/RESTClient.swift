@@ -9,6 +9,8 @@
 // It handles signon, session token, and network traffic. No domain specific knowledge.
 // REST call results (success and failure) are represented by RestCallResult enum which
 // is used in the RestResultClosure to simplify the callback interface.
+//
+// Some of this is motivated by the DreamFactory iOS Example, but mostly re-written. 
 
 import Foundation
 

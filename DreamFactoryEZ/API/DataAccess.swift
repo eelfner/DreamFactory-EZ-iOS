@@ -9,8 +9,8 @@
 // and the RESTClient generic data. Server calls are made asynchronously and callbacks
 // are by delegate protocols and always made on the main thread.
 //
-// Although this is implemented as a Singleton, it only has the restClient as state
-// data so could easily also be changed to be injected.
+// This is implemented as a singleton to simplify code and only access a specific server.
+// A more generic implementation would have server instance injected.
 
 import Foundation
 
