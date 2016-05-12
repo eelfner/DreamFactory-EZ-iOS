@@ -106,7 +106,7 @@ class DataAccess {
                 }
             }
             else {
-                let error = restResult.error ?? NSError(domain: "DreamFactory API", code: 500, userInfo: ["TODOKEY" : "Could not create Contact from API result."])
+                let error = restResult.error ?? NSError(domain: "DreamFactory API", code: 500, userInfo: [NSLocalizedDescriptionKey : "Could not create Contact from API result."])
                 dispatch_async(dispatch_get_main_queue()) {
                     resultDelegate.dataAccessError(error)
                 }
