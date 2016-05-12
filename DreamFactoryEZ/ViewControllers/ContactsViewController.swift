@@ -68,6 +68,9 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    @IBAction func refreshAction() {
+        reloadContactsForGroup(currentGroup)
+    }
     @IBAction func ezMoreAction() {
         // Link to GitHub
     }
@@ -80,15 +83,14 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         performSegueWithIdentifier(kNewContactSegue, sender: self)
     }
     
+    // Visual indication of activity. Could also use UIApplication.sharedApplication().networkActivityIndicatorVisible.
     @objc func activityChanged(notification:NSNotification) {
         let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
         if activityCount > 0 {
             activityIndicator.startAnimating()
-            //UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         }
         else {
             activityIndicator.stopAnimating()
-            //UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         }
     }
 
@@ -99,15 +101,11 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         dataAccess.getContacts(currentGroup, resultDelegate: self)
     }
     
-    @IBAction func groupsAction() {
-        performSegueWithIdentifier(kGroupsSegue, sender: self)
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == kSignInSegue {
             if let vc = segue.destinationViewController as? SignInViewController {
                 vc.completionClosure = { _ in
-                    self.reloadContactsForGroup(nil)
+                    self.reloadContactsForGroup(self.currentGroup)
                 }
             }
         }

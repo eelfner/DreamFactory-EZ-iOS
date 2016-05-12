@@ -122,7 +122,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ATu-xP-AEE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1432" y="530"/>
+            <point key="canvasLocation" x="1108" y="760"/>
         </scene>
         <!--Contacts-->
         <scene sceneID="g4g-T6-Qf5">
@@ -140,7 +140,7 @@
                                 <rect key="frame" x="0.0" y="64" width="300" height="38"/>
                                 <subviews>
                                     <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="BGU-Dm-ch1">
-                                        <rect key="frame" x="0.0" y="-3" width="207" height="44"/>
+                                        <rect key="frame" x="0.0" y="-3" width="165" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="CBl-2W-xqt"/>
                                         </constraints>
@@ -150,20 +150,37 @@
                                         </connections>
                                     </searchBar>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Abs-j2-aEK">
-                                        <rect key="frame" x="215" y="4" width="77" height="30"/>
+                                        <rect key="frame" x="173" y="0.0" width="77" height="38"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="38" id="QpH-f2-2nX"/>
+                                        </constraints>
                                         <state key="normal" title="Group: ALL"/>
                                         <connections>
                                             <segue destination="GV1-nl-GbA" kind="show" identifier="GroupsSegue" id="6qV-gd-Iox"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbL-8o-jmd">
+                                        <rect key="frame" x="258" y="0.0" width="38" height="38"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="38" id="4Eb-5h-P0B"/>
+                                            <constraint firstAttribute="height" constant="38" id="5su-e7-59q"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="redo"/>
+                                        <connections>
+                                            <action selector="refreshAction" destination="khX-T0-YB2" eventType="touchUpInside" id="PgO-6Y-Zwi"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.8596754808" green="0.77652425700000005" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="Abs-j2-aEK" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" constant="4" id="CDM-ph-S8S"/>
+                                    <constraint firstItem="Abs-j2-aEK" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" id="CDM-ph-S8S"/>
                                     <constraint firstItem="Abs-j2-aEK" firstAttribute="leading" secondItem="BGU-Dm-ch1" secondAttribute="trailing" constant="8" id="CIW-LJ-y4I"/>
+                                    <constraint firstAttribute="trailing" secondItem="BbL-8o-jmd" secondAttribute="trailing" constant="4" id="Y86-Ef-q7G"/>
+                                    <constraint firstItem="BbL-8o-jmd" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" id="aLb-qQ-5sC"/>
                                     <constraint firstItem="BGU-Dm-ch1" firstAttribute="top" secondItem="Rnp-Is-1uJ" secondAttribute="top" constant="-3" id="aN3-41-TKc"/>
                                     <constraint firstAttribute="height" constant="38" id="jgO-Gx-sCm"/>
-                                    <constraint firstAttribute="trailing" secondItem="Abs-j2-aEK" secondAttribute="trailing" constant="8" id="uYZ-A2-67N"/>
+                                    <constraint firstItem="BbL-8o-jmd" firstAttribute="leading" secondItem="Abs-j2-aEK" secondAttribute="trailing" constant="8" id="pDq-lT-aQG"/>
+                                    <constraint firstAttribute="bottom" secondItem="BbL-8o-jmd" secondAttribute="bottom" id="vGG-4h-K5H"/>
                                     <constraint firstItem="BGU-Dm-ch1" firstAttribute="leading" secondItem="Rnp-Is-1uJ" secondAttribute="leading" id="wxh-re-jda"/>
                                 </constraints>
                             </view>
@@ -268,7 +285,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ouj-Fa-TEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="766" y="1058"/>
+            <point key="canvasLocation" x="668" y="1064"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Ldn-1U-wdr">
@@ -288,7 +305,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc7-6O-LuH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="357" y="781"/>
+            <point key="canvasLocation" x="295" y="975"/>
         </scene>
         <!--Groups-->
         <scene sceneID="GL1-6s-BcZ">
@@ -345,7 +362,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cww-ts-CcL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1048" y="424"/>
+            <point key="canvasLocation" x="1032" y="1364"/>
         </scene>
         <!--Contact-->
         <scene sceneID="iwZ-iz-Dv2">
@@ -566,7 +583,7 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RgU-aM-cMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1185" y="1556"/>
+            <point key="canvasLocation" x="525" y="1804"/>
         </scene>
         <!--Address Edit View Controller-->
         <scene sceneID="2Wv-8a-NRA">
@@ -782,7 +799,7 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pss-Cv-Sz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1685" y="1911"/>
+            <point key="canvasLocation" x="1249" y="1831"/>
         </scene>
         <!--Contact Edit View Controller-->
         <scene sceneID="cB2-LL-gyN">
@@ -958,15 +975,16 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2TR-0y-5tO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1724" y="1180"/>
+            <point key="canvasLocation" x="1540" y="1064"/>
         </scene>
     </scenes>
     <resources>
         <image name="DreamFactory-logo-horiz-filled" width="1796" height="241"/>
         <image name="EZmore" width="80" height="80"/>
+        <image name="redo" width="60" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="5fS-Dj-Vr4"/>
         <segue reference="Ejg-Vz-DJ6"/>
-        <segue reference="uYT-de-eWz"/>
     </inferredMetricsTieBreakers>
 </document>
