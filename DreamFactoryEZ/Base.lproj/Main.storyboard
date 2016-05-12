@@ -277,6 +277,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="36k-lE-Dv7" id="Irn-Q0-QvP"/>
                         <outlet property="groupButton" destination="Abs-j2-aEK" id="CUR-y8-Y7N"/>
+                        <outlet property="searchBar" destination="BGU-Dm-ch1" id="R8n-Tu-okI"/>
                         <outlet property="tableView" destination="J7l-Z5-sQ7" id="955-FC-CKt"/>
                         <segue destination="Tvu-kV-Vo5" kind="show" identifier="SignInSegue" id="4Nn-ia-jfX"/>
                         <segue destination="3nV-AO-V2F" kind="show" identifier="NewContactSegue" id="5fS-Dj-Vr4"/>
@@ -969,6 +970,7 @@ Country</string>
                         <outlet property="firstNameTextField" destination="BhL-9c-EgV" id="sin-x2-2ea"/>
                         <outlet property="imageURLTextField" destination="f5M-2Y-bxs" id="Gge-v2-ctX"/>
                         <outlet property="lastNameTextField" destination="A5Q-uh-DIb" id="Za8-JQ-59j"/>
+                        <outlet property="removeContactButton" destination="vYz-SD-m4I" id="nHM-ET-S8p"/>
                         <outlet property="skypeTextField" destination="KON-ZU-tea" id="XUj-Ie-Wse"/>
                         <outlet property="twitterTextField" destination="Qqa-tD-kYZ" id="mLM-9v-Q7b"/>
                     </connections>

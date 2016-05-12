@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddressEditViewController: UIViewController, DataAccessUpdateDelegate {
+class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, ContactDetailDeleteDelegate {
 
     private let dataAccess = DataAccess.sharedInstance
     var contact:ContactRecord? = nil
@@ -87,7 +87,7 @@ class AddressEditViewController: UIViewController, DataAccessUpdateDelegate {
         }
     }
     
-    // MARK: DataAccessUpdateDelegate
+    // MARK: ContactDetailUpdateDelegate, ContactDetailDeleteDelegate
     
     func dataAccessSuccess() {
         if let contactID = contact?.id, cdd = contactDetailDelegate {

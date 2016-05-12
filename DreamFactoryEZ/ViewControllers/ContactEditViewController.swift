@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ContactEditViewController: UIViewController, ContactUpdateDelegate {
+class ContactEditViewController: UIViewController, ContactUpdateDelegate, ContactDeleteDelegate {
 
     private let dataAccess = DataAccess.sharedInstance
     var contact:ContactRecord? = nil
@@ -20,6 +20,7 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate {
     @IBOutlet weak var twitterTextField: UITextField!
     @IBOutlet weak var imageURLTextField: UITextField!
     @IBOutlet weak var notesTextField: UITextField!
+    @IBOutlet weak var removeContactButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,7 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate {
         }
         else {
             setValuesFromModel()
+            removeContactButton.hidden = contact?.isNew() ?? true
         }
     }
     
@@ -53,16 +55,16 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate {
     }
     
     @IBAction func removeItemAction() {
-//        if let contact = contact {
-//            let name = contact.fullName
-//            let alert = UIAlertController(title: "Remove Contact", message: "Remove this contact: \(name). Are you sure?", preferredStyle: .Alert)
-//            let delAction = UIAlertAction(title: "Remove", style: .Destructive) { (_) in
-//                self.dataAccess.removeContactForId(contact.id, delegate: self)
-//            }
-//            alert.addAction(delAction)
-//            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-//            presentViewController(alert, animated: true, completion: nil)
-//        }
+        if let contact = contact {
+            let name = contact.fullName
+            let alert = UIAlertController(title: "Remove Contact", message: "Remove this contact: \(name). Are you sure?", preferredStyle: .Alert)
+            let delAction = UIAlertAction(title: "Remove", style: .Destructive) { (_) in
+                self.dataAccess.removeContactForId(contact.id, delegate: self)
+            }
+            alert.addAction(delAction)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            presentViewController(alert, animated: true, completion: nil)
+        }
     }
     private func setValuesFromModel() {
         if let contact = contact {
@@ -78,15 +80,22 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate {
     
     // Pass the updated/new contact to the caller (ContactsVC, ContactVC) to handle.
     func setContact(contact:ContactRecord) {
-        if contact.id == -1 { // New
+        if contact.id == -1 { // New -> ContactsVC
             navigationController?.popViewControllerAnimated(false)
-            
-            
         }
         else if let ucd = updatedContactDelegate {
             ucd.setContact(contact)
             navigationController?.popViewControllerAnimated(true)
         }
+    }
+    
+    // MARK: DataAccessUpdateDelegate
+    
+    func dataAccessSuccess() {
+        navigationController?.popViewControllerAnimated(true)
+    }
+    func contactDeleteSuccess() {
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     func dataAccessError(error:NSError?) {
         let serverMsg = error?.localizedDescription ?? "Validation Issue"

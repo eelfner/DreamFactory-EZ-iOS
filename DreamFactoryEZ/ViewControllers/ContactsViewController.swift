@@ -22,6 +22,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var groupButton: UIButton!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     private let kCellID = "CellID"
     private let dataAccess = DataAccess.sharedInstance
@@ -32,7 +33,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     private var contactsMatchingSearch = [ContactRecord]()
 
     private var currentGroup:GroupRecord? = nil
-    private var bIsSearching = false
     private var newlyAddedContact:ContactRecord?
 
     override func viewDidLoad() {
@@ -165,6 +165,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         tableView.setContentOffset(CGPointZero, animated: true)
         tableView.reloadData()
+        search()
     }
     
     // MARK: ContactUpdateDelegate
@@ -182,12 +183,16 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - UISearchBarDelegate
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchText.isEmpty {
-            bIsSearching = false
-        }
-        else {
-            bIsSearching = true
+        search()
+    }
+    private func isSearching() -> Bool {
+        let searchText = searchBar.text ?? ""
+        return !searchText.isEmpty
+    }
+    private func search() {
+        let searchText = searchBar.text ?? ""
+    
+        if isSearching() {
             let searchString = searchText.uppercaseString
             contactsMatchingSearch.removeAll()
             
@@ -203,7 +208,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: UITableViewDataSource
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if bIsSearching {
+        if isSearching() {
             return 1
         }
         return contactsSectionsAlpha.count
@@ -211,7 +216,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rowCount = 0
-        if bIsSearching {
+        if isSearching() {
              rowCount = contactsMatchingSearch.count
         }
         else {
@@ -238,7 +243,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private func contactForIndexPath(indexPath:NSIndexPath) -> ContactRecord? {
         var contact:ContactRecord? = nil
-        if bIsSearching {
+        if isSearching() {
             contact = contactsMatchingSearch[indexPath.row]
         }
         else {
@@ -253,7 +258,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - UITableViewDelegate
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if bIsSearching {
+        if isSearching() {
             return nil
         }
         else {

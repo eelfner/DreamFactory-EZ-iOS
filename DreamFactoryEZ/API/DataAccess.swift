@@ -30,12 +30,16 @@ protocol SignInDelegate {
     func userIsSignedInSuccess(bSignedIn:Bool, message:String?)
     func userIsSignedOut()
 }
+protocol ContactsDelegate {
+    func setContacts(contacts:[ContactRecord])
+    func dataAccessError(error:NSError?)
+}
 protocol ContactUpdateDelegate {
     func setContact(contact:ContactRecord)
     func dataAccessError(error:NSError?)
 }
-protocol ContactsDelegate {
-    func setContacts(contacts:[ContactRecord])
+protocol ContactDeleteDelegate {
+    func contactDeleteSuccess()
     func dataAccessError(error:NSError?)
 }
 protocol ContactDetailDelegate {
@@ -43,7 +47,11 @@ protocol ContactDetailDelegate {
     func setContactDetails(details: [ContactDetailRecord])
     func dataAccessError(error:NSError?)
 }
-protocol DataAccessUpdateDelegate {
+protocol ContactDetailUpdateDelegate {
+    func dataAccessSuccess()
+    func dataAccessError(error:NSError?)
+}
+protocol ContactDetailDeleteDelegate {
     func dataAccessSuccess()
     func dataAccessError(error:NSError?)
 }
@@ -135,6 +143,59 @@ class DataAccess {
             }
         }
     }
+    
+    func removeContactForId(id:Int, delegate: ContactDeleteDelegate) {
+        
+        removeContactRelationWithContactId(id) { restResult in
+            if !restResult.bIsSuccess {
+                dispatch_async(dispatch_get_main_queue()) {
+                    delegate.dataAccessError(restResult.error)
+                }
+            }
+            else {
+                self.removeContactInfoWithContactId(id)  { restResult in
+                    if !restResult.bIsSuccess {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            delegate.dataAccessError(restResult.error)
+                        }
+                    }
+                    else {
+                        self.removeContactFromTableForId(id) { restResult in
+                            dispatch_async(dispatch_get_main_queue()) {
+                                if !restResult.bIsSuccess {
+                                    delegate.dataAccessError(restResult.error)
+                                }
+                                else {
+                                    delegate.contactDeleteSuccess()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func removeContactFromTableForId(id: Int, resultClosure: RestResultClosure) {
+        restClient.callRestService(kRestContact + "/\(id)", method: .DELETE, queryParams: nil, body: nil, resultClosure: resultClosure)
+    }
+    private func removeContactRelationWithContactId(contactId: Int, resultClosure: RestResultClosure) {
+        let queryParams: [String: AnyObject] = ["filter": "contact_id=\(contactId)"]
+        restClient.callRestService(kRestContactGroupRelationship, method: .DELETE, queryParams: queryParams, body: nil, resultClosure: resultClosure)
+    }
+    private func removeContactInfoWithContactId(contactId: Int, resultClosure: RestResultClosure) {
+        let queryParams: [String: AnyObject] = ["filter": "contact_id=\(contactId)"]
+        restClient.callRestService(kRestContactDetail, method: .DELETE, queryParams: queryParams, body: nil, resultClosure: resultClosure)
+    }
+    
+//    private func removeContactImageFolderWithContactId(contactId: NSNumber, success: SuccessClosure, failure: ErrorClosure) {
+//        
+//        // delete all files and folders in the target folder
+//        let queryParams: [String: AnyObject] = ["force": "1"]
+//        
+//        callApiWithPath(Routing.ResourceFolder(folderPath: "\(contactId)").path, method: "DELETE", queryParams: queryParams, body: nil, headerParams: sessionHeaderParams, success: success, failure: failure)
+//    }
+
     func addOrUpdateContact(contactRecord: ContactRecord, delegate: ContactUpdateDelegate) {
         let requestBody: JSON = ["resource" : [contactRecord.asJSON()]] // DreamFactory REST API body with {"resource" = [ { record }, ... ] }
         let methodType: HTTPMethod = contactRecord.isNew() ? .POST : .PATCH
@@ -172,7 +233,7 @@ class DataAccess {
         }
     }
 
-    func addOrUpdateAddress(detailRecord: ContactDetailRecord, delegate: DataAccessUpdateDelegate) {
+    func addOrUpdateAddress(detailRecord: ContactDetailRecord, delegate: ContactDetailUpdateDelegate) {
         let requestBody: JSON = ["resource" : [detailRecord.asJSON()]] // DreamFactory REST API body with {"resource" = [ { record }, ... ] }
         let methodType: HTTPMethod = detailRecord.isNew() ? .POST : .PATCH
 
@@ -189,7 +250,7 @@ class DataAccess {
             }
         }
     }
-    func removeAddressForId(id:Int, delegate: DataAccessUpdateDelegate) {
+    func removeAddressForId(id:Int, delegate: ContactDetailDeleteDelegate) {
         restClient.callRestService(kRestContactDetail + "/\(id)", method: .DELETE, queryParams: nil, body: nil) { restResult in
             if restResult.bIsSuccess {
                 dispatch_async(dispatch_get_main_queue()) {
