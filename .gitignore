@@ -139,3 +139,4 @@ Podfile.lock
 # ...none. Everything is now explained.
 _non-xcode-assets
 *.xcscmblueprint
+_non-xcode-files

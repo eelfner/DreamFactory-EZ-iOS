@@ -14,7 +14,6 @@
 		B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72BF1CDD3B8C00BA5E5B /* ContactViewController.swift */; };
 		B65C72C31CE14A5100BA5E5B /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65C72C21CE14A5100BA5E5B /* DetailTableViewCell.swift */; };
 		B663F9221CE37ED300472FE4 /* ContactEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B663F9211CE37ED300472FE4 /* ContactEditViewController.swift */; };
-		B663F9241CE4F86B00472FE4 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B663F9231CE4F86B00472FE4 /* README.md */; };
 		B66D0C201CE29DA900331B30 /* AddressEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66D0C1F1CE29DA900331B30 /* AddressEditViewController.swift */; };
 		B6BE3C1C1CDA661E00B15BEB /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1A1CDA661E00B15BEB /* SignInViewController.swift */; };
 		B6BE3C1D1CDA661E00B15BEB /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BE3C1B1CDA661E00B15BEB /* ContactsViewController.swift */; };
@@ -276,7 +275,6 @@
 				B65C72C01CDD3B8C00BA5E5B /* ContactViewController.swift in Sources */,
 				B6BE3C291CDA66A500B15BEB /* GroupRecord.swift in Sources */,
 				B6BE3C281CDA66A500B15BEB /* ContactRecord.swift in Sources */,
-				B663F9241CE4F86B00472FE4 /* README.md in Sources */,
 				B6BE3C2B1CDA686B00B15BEB /* JSON.swift in Sources */,
 				B6FCB6DE1CDB653000E1728C /* DataAccess.swift in Sources */,
 			);

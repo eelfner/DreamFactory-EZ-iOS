@@ -15,7 +15,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Shd-Jn-UvX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="EnM-ja-S6K">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vub-mg-oca">
@@ -122,7 +122,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ATu-xP-AEE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1108" y="760"/>
+            <point key="canvasLocation" x="1028" y="824"/>
         </scene>
         <!--Contacts-->
         <scene sceneID="g4g-T6-Qf5">
@@ -133,7 +133,7 @@
                         <viewControllerLayoutGuide type="bottom" id="vLs-Aj-N7Q"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="RwX-AR-ZfE">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rnp-Is-1uJ" userLabel="headerView">
@@ -185,7 +185,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="J7l-Z5-sQ7">
-                                <rect key="frame" x="0.0" y="102" width="300" height="358"/>
+                                <rect key="frame" x="0.0" y="102" width="300" height="258"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CellID" id="DMV-nV-mu4">
@@ -214,7 +214,7 @@
                                 <color key="color" white="0.21373167934033693" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O6N-q5-wrG" userLabel="footerView">
-                                <rect key="frame" x="0.0" y="460" width="300" height="40"/>
+                                <rect key="frame" x="0.0" y="360" width="300" height="40"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uM-TR-n3m">
                                         <rect key="frame" x="11" y="3" width="278" height="34"/>
@@ -286,7 +286,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ouj-Fa-TEx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="668" y="1064"/>
+            <point key="canvasLocation" x="611" y="829"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Ldn-1U-wdr">
@@ -294,7 +294,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="RDn-xB-8sq" sceneMemberID="viewController">
                     <toolbarItems/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="500"/>
+                    <size key="freeformSize" width="300" height="400"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="sD0-9j-GJv">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -306,7 +306,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc7-6O-LuH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="295" y="975"/>
+            <point key="canvasLocation" x="221" y="1139"/>
         </scene>
         <!--Groups-->
         <scene sceneID="GL1-6s-BcZ">
@@ -363,7 +363,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cww-ts-CcL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1032" y="1364"/>
+            <point key="canvasLocation" x="1059" y="1125"/>
         </scene>
         <!--Contact-->
         <scene sceneID="iwZ-iz-Dv2">
@@ -374,7 +374,7 @@
                         <viewControllerLayoutGuide type="bottom" id="36l-4c-y0d"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="UfU-XQ-0Rh">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zps-uP-yvX">
@@ -492,7 +492,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HSd-jv-w2A">
-                                <rect key="frame" x="0.0" y="181" width="300" height="319"/>
+                                <rect key="frame" x="0.0" y="181" width="300" height="219"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AddressCell" id="fxB-9T-IvE" customClass="DetailTableViewCell" customModule="DreamFactoryEZ" customModuleProvider="target">
@@ -584,7 +584,7 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RgU-aM-cMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="525" y="1804"/>
+            <point key="canvasLocation" x="654" y="1386"/>
         </scene>
         <!--Address Edit View Controller-->
         <scene sceneID="2Wv-8a-NRA">
@@ -595,7 +595,7 @@ Country</string>
                         <viewControllerLayoutGuide type="bottom" id="IAY-ta-OcJ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="fct-7h-hgz">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mib-Xy-NEv">
@@ -800,7 +800,7 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pss-Cv-Sz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1249" y="1831"/>
+            <point key="canvasLocation" x="1390" y="1402"/>
         </scene>
         <!--Contact Edit View Controller-->
         <scene sceneID="cB2-LL-gyN">
@@ -811,7 +811,7 @@ Country</string>
                         <viewControllerLayoutGuide type="bottom" id="Eeq-id-fTW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="M9Y-pw-nwg">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="3T3-Mn-mQH">
@@ -977,7 +977,7 @@ Country</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2TR-0y-5tO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1540" y="1064"/>
+            <point key="canvasLocation" x="1453" y="997"/>
         </scene>
     </scenes>
     <resources>
@@ -986,7 +986,7 @@ Country</string>
         <image name="redo" width="60" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5fS-Dj-Vr4"/>
         <segue reference="Ejg-Vz-DJ6"/>
+        <segue reference="uYT-de-eWz"/>
     </inferredMetricsTieBreakers>
 </document>
