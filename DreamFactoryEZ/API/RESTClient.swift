@@ -76,11 +76,10 @@ class RESTClient {
         sessionPwd = nil
         
         // For Testing can use expired token with presets in RESTClient
-        let kExpiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsInVzZXJfaWQiOjIsImVtYWlsIjoidXNlcjFAemNhZ2UuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9kZi1mdC1lcmljLWVsZm5lci5lbnRlcnByaXNlLmRyZWFtZmFjdG9yeS5jb21cL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NjI1NzA2NjEsImV4cCI6MTQ2MjU3NDI2MSwibmJmIjoxNDYyNTcwNjYxLCJqdGkiOiJkYjcyZjUxNWUxN2RiZTdlZWVjMDExNzliZGY2NTJhMiJ9.0NsO64trg3WgTh2-AUwSPhhz2XqSiXf5DXJVgHeH73Q"
-        sessionToken = kExpiredToken
-        sessionEmail = "user1@zcage.com" // Valid user
-        sessionPwd = "password" // Valid password
-
+        //let kExpiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsInVzZXJfaWQiOjIsImVtYWlsIjoidXNlcjFAemNhZ2UuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHBzOlwvXC9kZi1mdC1lcmljLWVsZm5lci5lbnRlcnByaXNlLmRyZWFtZmFjdG9yeS5jb21cL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE0NjI1NzA2NjEsImV4cCI6MTQ2MjU3NDI2MSwibmJmIjoxNDYyNTcwNjYxLCJqdGkiOiJkYjcyZjUxNWUxN2RiZTdlZWVjMDExNzliZGY2NTJhMiJ9.0NsO64trg3WgTh2-AUwSPhhz2XqSiXf5DXJVgHeH73Q"
+        //sessionToken = kExpiredToken
+        //sessionEmail = "user1@zcage.com" // Valid user
+        //sessionPwd = "password" // Valid password
     }
     
     func registerWithEmail(email:String, password:String, registrationSuccessHandler: SuccessHandler) {
