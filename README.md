@@ -1,7 +1,7 @@
 ## DreamFactoryEZ
 
 This project is primarily a rewrite of the [iOS Sample app](https://github.com/dreamfactorysoftware/ios-swift-sdk) 
-for DreamFactory. WHile that app has some nice features, it is outdated and not complete, and 
+for DreamFactory. While that app has some nice features, it is outdated and not complete, and 
 seems to have some issues. It also does not seem very standard. 
 This replacement uses the same demo backend and requires the same setup at that one.
 [See Instructions](https://github.com/dreamfactorysoftware/ios-swift-sdk). 
