@@ -7,7 +7,7 @@ This replacement uses the same demo backend and requires the same setup at that 
 [See Instructions](https://github.com/dreamfactorysoftware/ios-swift-sdk). 
 I have committed this code with the API keys for my dev DreamFactory backend, so this may work out-of-the-box.
 But be warned that with my API key exposed, that data is up from grabs and I'll take it down
-once I see or hear of any abuse.'
+once I see or hear of any abuse.
 
 ![DreamFactory EZ Demo](./README/DreamFactoryEZ.gif)
 
@@ -66,7 +66,7 @@ sure would be more trouble free, I just wanted to know that I could do the insta
 
 It seems that the user community is very active and the product has good support.
 I am a bit **shocked** at the implementation of the iOS app sample app, thus, I have created this
-project. The samples do not do the DreamFactory service justice. You should check it out.
-[DreamFactory](https://www.dreamfactory.com):
+project. The samples do not do the DreamFactory service justice. You should check it out:
+[DreamFactory](https://www.dreamfactory.com)
 
 Thanks for looking, Eric
