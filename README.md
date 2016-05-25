@@ -6,6 +6,8 @@ seems to have some issues. It also does not seem very standard.
 This replacement uses the same demo backend and requires the same setup at that one.
 [See Instructions](https://github.com/dreamfactorysoftware/ios-swift-sdk). 
 I have committed this code with the API keys for my dev DreamFactory backend, so this may work out-of-the-box.
+But be warned that with my API key exposed, that data is up from grabs and I'll take it down
+once I see or hear of any abuse.'
 
 ![DreamFactory EZ Demo](./README/DreamFactoryEZ.gif)
 
@@ -56,11 +58,15 @@ I found DreamFactory while search for, well something just like it. From the [we
 > DreamFactory instantly generates a flexible, comprehensive, and fully documented 
 > REST API endpoint that’s ready to use.
 
-I have big plans for DreamFactory. Installing on my VPS was a bit of a pain, but 
-there are Bitnami installers that I'm sure would be more trouble free.
+I have big plans for DreamFactory. Installing on my VPS was initially a bit of a pain, but
+was completely straight forward once I used a plesk installed PHP 5.6 rather than updating
+the Centos Server version from PHP 5.4 to 5.6 (I probably mucked that up even though it
+seemed to be working). Also, there are Bitnami installers for DreamFactory that I'm 
+sure would be more trouble free, I just wanted to know that I could do the install directly.
 
 It seems that the user community is very active and the product has good support.
 I am a bit **shocked** at the implementation of the iOS app sample app, thus, I have created this
-project.
+project. The samples do not do the DreamFactory service justice. You should check it out.
+[DreamFactory](https://www.dreamfactory.com):
 
 Thanks for looking, Eric
