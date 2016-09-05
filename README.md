@@ -27,6 +27,13 @@ once I see or hear of any abuse.
  
 ![StoryBoard](./README/MainStoryboard.png)
 
+### Setup Note
+
+ - The DataAccess.swift file has the credentials for running this App via my personal demo
+ DreamFactor account. It appears that they occasionally delete these, perhaps after a period
+ of unusage. If the app does not run out-of-the-box you may need to setup your own server,
+ or just ping me and I can setup a new one. 
+
 ### Changes from DreamFactory demo
   
  - Display, flow, presentation completely changed.
