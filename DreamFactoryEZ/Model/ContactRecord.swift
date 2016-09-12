@@ -31,7 +31,7 @@ class ContactRecord: Equatable {
     }
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber {
-            id = _id.integerValue
+            id = _id.intValue
             firstName = json.stringValue("first_name")
             lastName = json.stringValue("last_name")
             notes = json.stringValue("notes")
@@ -43,7 +43,7 @@ class ContactRecord: Equatable {
             return nil
         }
     }
-    static func fromJsonArray(jsonArray:JSONArray)->[ContactRecord] {
+    static func fromJsonArray(_ jsonArray:JSONArray)->[ContactRecord] {
         var contacts = [ContactRecord]()
         for json in jsonArray {
             if let contact = ContactRecord(json: json) {
@@ -53,17 +53,17 @@ class ContactRecord: Equatable {
         return contacts
     }
     func asJSON() -> JSON {
-        var json = ["id": id,
-                    "first_name": firstName,
-                    "last_name": lastName,
-                    "notes": notes,
-                    "skype": skype,
-                    "twitter": twitter] as JSON
+        var json = ["id": id as AnyObject,
+                    "first_name": firstName as AnyObject,
+                    "last_name": lastName as AnyObject,
+                    "notes": notes as AnyObject,
+                    "skype": skype as AnyObject,
+                    "twitter": twitter as AnyObject] as JSON
         if let imageURL = imageURL {
-            json["image_url"] = imageURL
+            json["image_url"] = imageURL as AnyObject?
         }
         if isNew() {
-            json.removeValueForKey("id")
+            json.removeValue(forKey: "id")
         }
         return json
     }

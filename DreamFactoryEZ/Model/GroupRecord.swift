@@ -16,7 +16,7 @@ class GroupRecord {
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber,
             let _name = json["name"] as? String {
-            id = _id.integerValue
+            id = _id.intValue
             name = _name
         }
         else {

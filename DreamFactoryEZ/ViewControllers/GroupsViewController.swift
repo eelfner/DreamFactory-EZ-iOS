@@ -12,8 +12,8 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    private let kCellID = "CellID"
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let kCellID = "CellID"
+    fileprivate let dataAccess = DataAccess.sharedInstance
 
     var selectedGroup:GroupRecord?
     var completionClosure: ((GroupRecord?)->Void)? = nil
@@ -22,22 +22,22 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityChanged), name: NSNotification.Name(rawValue: kRESTServerActiveCountUpdated), object: nil)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if dataAccess.allGroups.count == 0 {
             // Could give some visual indication
-            navigationController?.popToRootViewControllerAnimated(true)
+            _ = navigationController?.popToRootViewController(animated: true)
         }
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func activityChanged(notification:NSNotification) {
-        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+    @objc func activityChanged(_ notification:Notification) {
+        let activityCount = ((notification as NSNotification).userInfo?["count"] as? NSNumber)?.intValue ?? 0
         if activityCount > 0 {
             activityIndicator.startAnimating()
         }
@@ -47,23 +47,23 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     @IBAction func groupsAction() {
-        performSegueWithIdentifier("GroupsSegue", sender: self)
+        performSegue(withIdentifier: "GroupsSegue", sender: self)
     }
     
     // MARK: UITableViewDataSource
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataAccess.allGroups.count + 1
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: kCellID)
         if (cell == nil) {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: kCellID)
+            cell = UITableViewCell(style: .default, reuseIdentifier: kCellID)
         }
         
         var cellLabel = "All Groups"
         var bIsCurrent = false
-        if indexPath.row > 0 {
-            let cellGroup = dataAccess.allGroups[indexPath.row - 1]
+        if (indexPath as NSIndexPath).row > 0 {
+            let cellGroup = dataAccess.allGroups[(indexPath as NSIndexPath).row - 1]
             cellLabel = cellGroup.name
             bIsCurrent = (cellGroup.id == selectedGroup?.id)
         }
@@ -72,22 +72,22 @@ class GroupsViewController: UIViewController, UITableViewDataSource, UITableView
         }
         cell!.textLabel?.text = cellLabel
 
-        cell!.accessoryType = bIsCurrent ? .Checkmark : .None
-        cell!.selectionStyle = .None
+        cell!.accessoryType = bIsCurrent ? .checkmark : .none
+        cell!.selectionStyle = .none
         
         return cell!
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == 0 {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).row == 0 {
             selectedGroup = nil
         }
         else {
-            let group = dataAccess.allGroups[indexPath.row - 1]
+            let group = dataAccess.allGroups[(indexPath as NSIndexPath).row - 1]
             selectedGroup = group
         }
         // Set select and exit
         completionClosure?(selectedGroup)
-        navigationController?.popViewControllerAnimated(true)
+        _ = navigationController?.popViewController(animated: true)
     }
 }
 

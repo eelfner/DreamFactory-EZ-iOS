@@ -13,7 +13,7 @@ typealias JSON = [String: AnyObject]
 typealias JSONArray = [JSON]
 
 extension Dictionary {
-    func stringValue(key: Key) -> String {
+    func stringValue(_ key: Key) -> String {
         let value = (self[key] as? String) ?? ""
         return value
     }
@@ -25,10 +25,10 @@ extension String {
      */
     
     func stringByAddingPercentEncodingForURLQueryValue() -> String? {
-        let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()
-        characterSet.addCharactersInString("-._~")
+        let characterSet = NSMutableCharacterSet.alphanumeric()
+        characterSet.addCharacters(in: "-._~")
         
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
+        return self.addingPercentEncoding(withAllowedCharacters: characterSet as CharacterSet)
     }
 }
 
@@ -46,16 +46,16 @@ extension Dictionary {
             return "\(percentEscapedKey)=\(percentEscapedValue)"
         }
         
-        return parameterArray.joinWithSeparator("&")
+        return parameterArray.joined(separator: "&")
     }
 }
 
-extension NSURLRequest {
+extension URLRequest {
     func pathAndQuery() -> String {
-        if let url = URL {
-            var p = url.path ?? "/"
+        if let url = url {
+            var p = url.path
             if let q = url.query {
-                let qDecoded = q.stringByRemovingPercentEncoding ?? ""
+                let qDecoded = q.removingPercentEncoding ?? ""
                 p += "?\(qDecoded)"
             }
             return p

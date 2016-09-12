@@ -10,12 +10,12 @@ import UIKit
 
 class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, ContactDetailDeleteDelegate {
 
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let dataAccess = DataAccess.sharedInstance
     var contact:ContactRecord? = nil
     var address:ContactDetailRecord? = nil
     var contactDetailDelegate:ContactDetailDelegate? = nil
     
-    private let types = ["Work", "Home", "Mobile", "Other"]
+    fileprivate let types = ["Work", "Home", "Mobile", "Other"]
     
     @IBOutlet weak var typeSegmentedControl: UISegmentedControl!
     @IBOutlet weak var phoneTextField: UITextField!
@@ -30,23 +30,23 @@ class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, 
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveSelected))
-        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveSelected))
+        self.navigationItem.setRightBarButton(rightMenuItem, animated: false);
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if !dataAccess.isSignedIn() {
-            navigationController?.popToRootViewControllerAnimated(true)
+            _ = navigationController?.popToRootViewController(animated: true)
         }
         else if contact == nil || address == nil {
-            navigationController?.popViewControllerAnimated(true)
+            _ = navigationController?.popViewController(animated: true)
         }
         else {
             setValuesFromModel()
         }
     }
     
-    @objc private func saveSelected() {
+    @objc fileprivate func saveSelected() {
         if let contact = contact {
             let addressRecord = ContactDetailRecord(contactId: contact.id)
             addressRecord.id = address?.id ?? -1
@@ -65,19 +65,19 @@ class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, 
     }
     
     @IBAction func removeItemAction() {
-        if let id = address?.id, name = contact?.fullName {
-            let alert = UIAlertController(title: "Remove Address", message: "Remove this address for \(name). Are you sure?", preferredStyle: .Alert)
-            let delAction = UIAlertAction(title: "Remove", style: .Destructive) { (_) in
+        if let id = address?.id, let name = contact?.fullName {
+            let alert = UIAlertController(title: "Remove Address", message: "Remove this address for \(name). Are you sure?", preferredStyle: .alert)
+            let delAction = UIAlertAction(title: "Remove", style: .destructive) { (_) in
                 self.dataAccess.removeAddressForId(id, delegate: self)
             }
             alert.addAction(delAction)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
-    private func setValuesFromModel() {
+    fileprivate func setValuesFromModel() {
         if let address = address {
-            typeSegmentedControl.selectedSegmentIndex = types.indexOf(address.type.capitalizedString) ?? 0
+            typeSegmentedControl.selectedSegmentIndex = types.index(of: address.type.capitalized) ?? 0
             phoneTextField.text = address.phone
             emailTextField.text = address.email
             addressTextField.text = address.address
@@ -91,16 +91,16 @@ class AddressEditViewController: UIViewController, ContactDetailUpdateDelegate, 
     // MARK: ContactDetailUpdateDelegate, ContactDetailDeleteDelegate
     
     func dataAccessSuccess() {
-        if let contactID = contact?.id, cdd = contactDetailDelegate {
+        if let contactID = contact?.id, let cdd = contactDetailDelegate {
             dataAccess.getContactDetails(contactID, resultDelegate: cdd)
-            navigationController?.popViewControllerAnimated(true)
+            _ = navigationController?.popViewController(animated: true)
         }
     }
-    func dataAccessError(error:NSError?) {
+    func dataAccessError(_ error:NSError?) {
         let serverMsg = error?.localizedDescription ?? "Validation Issue"
         let msg = "Server reported error. Please try again. \n[\(serverMsg)]"
-        let alert = UIAlertController(title: "Save Issue", message: msg, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Save Issue", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

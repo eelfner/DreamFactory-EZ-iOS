@@ -31,7 +31,7 @@ class ContactDetailRecord: CustomStringConvertible {
         if country != "" {d += country + "\n" }
         
         if d.hasSuffix("\n") {
-            d = d.substringToIndex(d.endIndex.predecessor())
+            d = d.substring(to: d.characters.index(before: d.endIndex))
         }
         return d
     }
@@ -50,10 +50,10 @@ class ContactDetailRecord: CustomStringConvertible {
     init?(json: JSON) {
         if let _id = json["id"] as? NSNumber,
          let _contactId = json["contact_id"] as? NSNumber {
-            id = _id.integerValue
-            contactId = _contactId.integerValue
+            id = _id.intValue
+            contactId = _contactId.intValue
             
-            type = json.stringValue("info_type").uppercaseString
+            type = json.stringValue("info_type").uppercased()
             phone = json.stringValue("phone")
             email = json.stringValue("email")
             country = json.stringValue("country")
@@ -68,19 +68,21 @@ class ContactDetailRecord: CustomStringConvertible {
         }
     }
     func asJSON() -> JSON {
-        var json = ["id": id,
-                    "contact_id": contactId,
-                    "info_type": type.lowercaseString,
-                    "phone": phone,
-                    "email": email,
-                    "address": address,
-                    "city": city,
-                    "state": state,
-                    "zip": zipCode,
-                    "country": country] as JSON
-        if isNew() {
-            json.removeValueForKey("id")
+        var json = JSON()
+        if !isNew() {
+            json["id"] = id as AnyObject
         }
+        json["contact_id"] = contactId as AnyObject
+        json["info_type"] = type.lowercased() as AnyObject
+        json["phone"] = phone as AnyObject
+        json["email"] = email as AnyObject
+        json["address"] = address as AnyObject
+        json["city"] = city as AnyObject
+        json["state"] = state as AnyObject
+        json["city"] = city as AnyObject
+        json["zip"] = zipCode as AnyObject
+        json["country"] = country as AnyObject
+
         return json
     }
     func isNew() -> Bool {

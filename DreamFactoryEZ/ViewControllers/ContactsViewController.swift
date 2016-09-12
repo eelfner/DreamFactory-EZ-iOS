@@ -20,40 +20,40 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     @IBOutlet weak var groupButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    private let kCellID = "CellID"
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let kCellID = "CellID"
+    fileprivate let dataAccess = DataAccess.sharedInstance
 
-    private var contacts = [ContactRecord]()
-    private var contactsSectionsAlpha = [String]()
-    private var contactsBySection = [String: [ContactRecord]]()
-    private var contactsMatchingSearch = [ContactRecord]()
+    fileprivate var contacts = [ContactRecord]()
+    fileprivate var contactsSectionsAlpha = [String]()
+    fileprivate var contactsBySection = [String: [ContactRecord]]()
+    fileprivate var contactsMatchingSearch = [ContactRecord]()
 
-    private var currentGroup:GroupRecord? = nil
-    private var newlyAddedContact:ContactRecord?
+    fileprivate var currentGroup:GroupRecord? = nil
+    fileprivate var newlyAddedContact:ContactRecord?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self, action: #selector(settingsSelected))
-        self.navigationItem.setLeftBarButtonItem(leftMenuItem, animated: false);
+        let leftMenuItem = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(settingsSelected))
+        self.navigationItem.setLeftBarButton(leftMenuItem, animated: false);
         
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addSelected))
-        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSelected))
+        self.navigationItem.setRightBarButton(rightMenuItem, animated: false);
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityChanged), name: NSNotification.Name(rawValue: kRESTServerActiveCountUpdated), object: nil)
 
         if dataAccess.isSignedIn() {
             reloadContactsForGroup(currentGroup)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if !dataAccess.isSignedIn() {
-            performSegueWithIdentifier(kSignInSegue, sender: self)
+            performSegue(withIdentifier: kSignInSegue, sender: self)
         }
         else if newlyAddedContact != nil {
-            performSegueWithIdentifier(kViewNewContactSegue, sender: self)
+            performSegue(withIdentifier: kViewNewContactSegue, sender: self)
         }
         else {
             tableView.reloadData()
@@ -61,7 +61,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     @IBAction func refreshAction() {
@@ -72,16 +72,16 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     @objc func settingsSelected() {
         // Could go to a complete Settings View, but here we just show the SignIn
-        performSegueWithIdentifier(kSignInSegue, sender: self)
+        performSegue(withIdentifier: kSignInSegue, sender: self)
     }
     
     @objc func addSelected() {
-        performSegueWithIdentifier(kNewContactSegue, sender: self)
+        performSegue(withIdentifier: kNewContactSegue, sender: self)
     }
     
     // Visual indication of activity. Could also use UIApplication.sharedApplication().networkActivityIndicatorVisible.
-    @objc func activityChanged(notification:NSNotification) {
-        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+    @objc func activityChanged(_ notification:Notification) {
+        let activityCount = ((notification as NSNotification).userInfo?["count"] as? NSNumber)?.intValue ?? 0
         if activityCount > 0 {
             activityIndicator.startAnimating()
         }
@@ -90,23 +90,26 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
-    private func reloadContactsForGroup(group:GroupRecord?) {
+    fileprivate func reloadContactsForGroup(_ group:GroupRecord?) {
         currentGroup = group
         let label = group?.name ?? "ALL Groups"
-        groupButton.setTitle(label, forState: .Normal)
+        groupButton.setTitle(label, for: UIControlState())
         dataAccess.getContacts(currentGroup, resultDelegate: self)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        searchBar.resignFirstResponder()
+        
         if segue.identifier == kSignInSegue {
-            if let vc = segue.destinationViewController as? SignInViewController {
+            if let vc = segue.destination as? SignInViewController {
                 vc.completionClosure = { _ in
                     self.reloadContactsForGroup(self.currentGroup)
                 }
             }
         }
         else if segue.identifier == kGroupsSegue {
-            if let vc = segue.destinationViewController as? GroupsViewController {
+            if let vc = segue.destination as? GroupsViewController {
                 vc.selectedGroup = currentGroup
                 vc.completionClosure = { (newGroup) in
                     self.reloadContactsForGroup(newGroup)
@@ -114,7 +117,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
         else if segue.identifier == kDetailSegue {
-            if let vc = segue.destinationViewController as? ContactViewController {
+            if let vc = segue.destination as? ContactViewController {
                 if let ip = tableView?.indexPathForSelectedRow {
                     if let contact = contactForIndexPath(ip) {
                         vc.contact = contact
@@ -123,14 +126,14 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
         else if segue.identifier == kNewContactSegue {
-            if let vc = segue.destinationViewController as? ContactEditViewController {
+            if let vc = segue.destination as? ContactEditViewController {
                 let contact = ContactRecord()
                 vc.contact = contact
                 vc.updatedContactDelegate = self
             }
         }
         else if segue.identifier == kViewNewContactSegue {
-            if let vc = segue.destinationViewController as? ContactViewController {
+            if let vc = segue.destination as? ContactViewController {
                 if let contact = newlyAddedContact {
                     vc.contact = contact
                     newlyAddedContact = nil
@@ -139,16 +142,16 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    // MARK: ContactsDelegate
+    // MARK: - ContactsDelegate
     
-    func setContacts(contacts: [ContactRecord]) {
+    func setContacts(_ contacts: [ContactRecord]) {
         self.contacts = contacts
         contactsSectionsAlpha = [String]()
         contactsBySection = [String: [ContactRecord]]()
 
         for contact in contacts {
             let name = contact.fullName
-            let firstChar = name.substringToIndex(name.startIndex.advancedBy(1, limit: name.endIndex))
+            let firstChar = name.substring(to: name.characters.index(name.startIndex, offsetBy: 1, limitedBy: name.endIndex)!)
             if contactsBySection.keys.contains(firstChar) {
                 contactsBySection[firstChar]!.append(contact)
             }
@@ -159,18 +162,18 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                 contactsBySection[firstChar] = alphaSection
             }
         }
-        tableView.setContentOffset(CGPointZero, animated: true)
+        tableView.setContentOffset(CGPoint.zero, animated: true)
         tableView.reloadData()
         search()
     }
     
-    // MARK: ContactUpdateDelegate
+    // MARK: - ContactUpdateDelegate
     
-    func setContact(contact: ContactRecord) {
+    func setContact(_ contact: ContactRecord) {
         newlyAddedContact = contact
     }
     
-    func dataAccessError(error: NSError?) {
+    func dataAccessError(_ error: NSError?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
         }
@@ -178,39 +181,42 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - UISearchBarDelegate
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         search()
     }
-    private func isSearching() -> Bool {
+    fileprivate func isSearching() -> Bool {
         let searchText = searchBar.text ?? ""
         return !searchText.isEmpty
     }
-    private func search() {
+    fileprivate func search() {
         let searchText = searchBar.text ?? ""
     
         if isSearching() {
-            let searchString = searchText.uppercaseString
+            let searchString = searchText.uppercased()
             contactsMatchingSearch.removeAll()
             
             for contact in contacts {
-                if contact.fullName.uppercaseString.containsString(searchString) {
+                if contact.fullName.uppercased().contains(searchString) {
                     contactsMatchingSearch.append(contact)
                 }
             }
         }
         tableView.reloadData()
     }
-
-    // MARK: UITableViewDataSource
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    // MARK: - UITableViewDataSource
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         if isSearching() {
             return 1
         }
         return contactsSectionsAlpha.count
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rowCount = 0
         if isSearching() {
              rowCount = contactsMatchingSearch.count
@@ -223,11 +229,11 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         return rowCount
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(kCellID)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: kCellID)
         
         if (cell == nil) {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: kCellID)
+            cell = UITableViewCell(style: .default, reuseIdentifier: kCellID)
         }
         var contactName = "(no-name)"
         if let contact = contactForIndexPath(indexPath) {
@@ -237,15 +243,15 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         return cell!
     }
     
-    private func contactForIndexPath(indexPath:NSIndexPath) -> ContactRecord? {
+    fileprivate func contactForIndexPath(_ indexPath:IndexPath) -> ContactRecord? {
         var contact:ContactRecord? = nil
         if isSearching() {
-            contact = contactsMatchingSearch[indexPath.row]
+            contact = contactsMatchingSearch[(indexPath as NSIndexPath).row]
         }
         else {
-            let sectionAlpha = contactsSectionsAlpha[indexPath.section]
+            let sectionAlpha = contactsSectionsAlpha[(indexPath as NSIndexPath).section]
             if let sectionContacts = contactsBySection[sectionAlpha] {
-                contact = sectionContacts[indexPath.row]
+                contact = sectionContacts[(indexPath as NSIndexPath).row]
             }
         }
         return contact
@@ -253,7 +259,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - UITableViewDelegate
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if isSearching() {
             return nil
         }
@@ -262,15 +268,15 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         view.tintColor = UIColor(red: 210/255.0, green: 225/255.0, blue: 239/255.0, alpha: 1.0)
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 //        if editingStyle == .Delete {
 //            if isSearch {
 //                let record = displayContentArray[indexPath.row]

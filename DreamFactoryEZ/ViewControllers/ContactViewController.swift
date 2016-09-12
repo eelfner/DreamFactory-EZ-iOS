@@ -25,14 +25,14 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet weak var editImageButton: UIButton!
     @IBOutlet weak var editNameButton: UIButton!
     
-    private let kAddressCell = "AddressCell"
-    private let kGroupCell = "GroupCell"
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let kAddressCell = "AddressCell"
+    fileprivate let kGroupCell = "GroupCell"
+    fileprivate let dataAccess = DataAccess.sharedInstance
 
     var contact: ContactRecord?
-    private var groups = [GroupRecord]()
-    private var details = [ContactDetailRecord]()
-    private var bIsEditMode = false
+    fileprivate var groups = [GroupRecord]()
+    fileprivate var details = [ContactDetailRecord]()
+    fileprivate var bIsEditMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,10 +47,10 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         configureTableView()
         setupForView()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityChanged), name: NSNotification.Name(rawValue: kRESTServerActiveCountUpdated), object: nil)
         
     }
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if dataAccess.isSignedIn() {
             updateContact()
             if let id = contact?.id {
@@ -58,35 +58,35 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
         else {
-            navigationController?.popToRootViewControllerAnimated(true)
+            _ = navigationController?.popToRootViewController(animated: true)
         }
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    private func setupForView() {
+    fileprivate func setupForView() {
         bIsEditMode = false
-        self.navigationItem.setLeftBarButtonItem(nil, animated: false);
+        self.navigationItem.setLeftBarButton(nil, animated: false);
         
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(editSelected))
-        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editSelected))
+        self.navigationItem.setRightBarButton(rightMenuItem, animated: false);
         
-        editImageButton.hidden = true
-        editNameButton.hidden = true
+        editImageButton.isHidden = true
+        editNameButton.isHidden = true
         
         tableView.allowsSelection = false
         tableView.reloadData()
     }
-    private func setupForEdit() {
+    fileprivate func setupForEdit() {
         bIsEditMode = true
-        self.navigationItem.setLeftBarButtonItem(nil, animated: false);
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(saveSelected))
-        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        self.navigationItem.setLeftBarButton(nil, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveSelected))
+        self.navigationItem.setRightBarButton(rightMenuItem, animated: false);
         
-        editImageButton.hidden = false
-        editNameButton.hidden = false
+        editImageButton.isHidden = false
+        editNameButton.isHidden = false
         
         tableView.allowsSelection = true
         tableView.reloadData()
@@ -104,8 +104,8 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         setupForView()
     }
 
-    @objc func activityChanged(notification:NSNotification) {
-        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+    @objc func activityChanged(_ notification:Notification) {
+        let activityCount = ((notification as NSNotification).userInfo?["count"] as? NSNumber)?.intValue ?? 0
         if activityCount > 0 {
             activityIndicator.startAnimating()
         }
@@ -115,11 +115,11 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     @IBAction func editAction() {
-        performSegueWithIdentifier(kEditContactSegue, sender: self)
+        performSegue(withIdentifier: kEditContactSegue, sender: self)
     }
     @IBAction func editImageAction() {
     }
-    private func updateContact() {
+    fileprivate func updateContact() {
         contactImageView.image = UIImage(named: "default_portrait")
         contactFullNameLabel.text = contact?.fullName
         contactSkypeLabel.text = contact?.skype
@@ -127,11 +127,11 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
         contactNotesLabel.text = contact?.notes
         
         // Request image [nicer use AFNetworking imageView.setImageWithURLRequest(request ...]
-        if let image = contact?.imageURL, imageUrl = NSURL(string: image) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                let imageData = NSData(contentsOfURL: imageUrl)
+        if let image = contact?.imageURL, let imageUrl = URL(string: image) {
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: {
+                let imageData = try? Data(contentsOf: imageUrl)
                 if let data = imageData {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         if let image = UIImage(data: data) {
                             self.contactImageView.image = image
                         }
@@ -148,12 +148,12 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: ContactDetailDelegate
     
-    func setContactGroups(groups: [GroupRecord]) {
+    func setContactGroups(_ groups: [GroupRecord]) {
         self.groups = groups
         //self.tableView.reloadSections(NSIndexSet(), withRowAnimation: .Fade)
         self.tableView.reloadData()
     }
-    func setContactDetails(details: [ContactDetailRecord]) {
+    func setContactDetails(_ details: [ContactDetailRecord]) {
         self.details = details
         //self.tableView.reloadSections(NSIndexSet(), withRowAnimation: .Fade)
         self.tableView.reloadData()
@@ -161,12 +161,12 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: ContactUpdateDelegate
     
-    func setContact(contact:ContactRecord) {
+    func setContact(_ contact:ContactRecord) {
         self.contact = contact
         updateContact()
     }
 
-    func dataAccessError(error: NSError?) {
+    func dataAccessError(_ error: NSError?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
         }
@@ -174,88 +174,88 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: UITableViewDataSource
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "Addresses"
         case 1: return "Groups"
         default: return nil
         }
     }
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return bIsEditMode ? details.count + 1 : details.count
         case 1: return bIsEditMode ? dataAccess.allGroups.count : groups.count
         default: return 0
         }
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            return cellForDetailAtIndex(indexPath.row)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath as NSIndexPath).section == 0 {
+            return cellForDetailAtIndex((indexPath as NSIndexPath).row)
         }
         else {
-            return cellForGroupAtIndex(indexPath.row)
+            return cellForGroupAtIndex((indexPath as NSIndexPath).row)
         }
     }
-    private func cellForDetailAtIndex(iDetail:Int) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(kAddressCell)
+    fileprivate func cellForDetailAtIndex(_ iDetail:Int) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: kAddressCell)
         if (cell == nil) {
-            cell = DetailTableViewCell(style: .Default, reuseIdentifier: kAddressCell)
+            cell = DetailTableViewCell(style: .default, reuseIdentifier: kAddressCell)
         }
         if let cell = cell as? DetailTableViewCell {
             if iDetail == details.count {
                 // Edit mode, new Address
                 cell.typeLabel.text = "NEW"
                 cell.addressLabel.text = "(Add new Address)"
-                cell.accessoryType = .DisclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
             else {
             let detail = details[iDetail]
                 cell.typeLabel.text = detail.type
                 cell.addressLabel.text = detail.description
-                cell.accessoryType = bIsEditMode ? .DisclosureIndicator : .None
+                cell.accessoryType = bIsEditMode ? .disclosureIndicator : .none
             }
         }
         
         return cell!
     }
-    private func cellForGroupAtIndex(iGroup:Int) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(kGroupCell)
+    fileprivate func cellForGroupAtIndex(_ iGroup:Int) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: kGroupCell)
         if (cell == nil) {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: kGroupCell)
+            cell = UITableViewCell(style: .default, reuseIdentifier: kGroupCell)
         }
         if bIsEditMode {
             let groupName = dataAccess.allGroups[iGroup].name
             cell?.textLabel?.text = groupName
             let bIsForUser = userHasGroupName(groupName)
-            cell?.accessoryType = bIsForUser ? .Checkmark : .None
+            cell?.accessoryType = bIsForUser ? .checkmark : .none
         }
         else {
             cell?.textLabel?.text = groups[iGroup].name
-            cell?.accessoryType = .Checkmark
+            cell?.accessoryType = .checkmark
         }
         return cell!
     }
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         var bCanEdit = false
-        if indexPath.section == 0 && bIsEditMode {
+        if (indexPath as NSIndexPath).section == 0 && bIsEditMode {
             bCanEdit = true
         }
         return bCanEdit
     }
     // MARK: UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard bIsEditMode else { return }
         
-        if indexPath.section == 0 {
-            performSegueWithIdentifier(kEditAddressSegue, sender: self)
+        if (indexPath as NSIndexPath).section == 0 {
+            performSegue(withIdentifier: kEditAddressSegue, sender: self)
         }
         else {
             if let contact = contact {
-                let selectedGroup = dataAccess.allGroups[indexPath.row]
+                let selectedGroup = dataAccess.allGroups[(indexPath as NSIndexPath).row]
                 let bHasGroup = userHasGroupName(selectedGroup.name)
                 if bHasGroup {
                     dataAccess.removeContact(contact, fromGroupId: selectedGroup.id, resultDelegate: self)
@@ -266,16 +266,16 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    private func userHasGroupName(groupName:String) -> Bool {
-        let bHasGroup = groups.contains({ (g) -> Bool in g.name == groupName })
+    fileprivate func userHasGroupName(_ groupName:String) -> Bool {
+        let bHasGroup = groups.contains(where: { (g) -> Bool in g.name == groupName })
         return bHasGroup
     }
     
     // MARK: Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == kEditAddressSegue {
-            if let vc = segue.destinationViewController as? AddressEditViewController {
-                if let contact = contact, row = tableView.indexPathForSelectedRow?.row {
+            if let vc = segue.destination as? AddressEditViewController {
+                if let contact = contact, let row = (tableView.indexPathForSelectedRow as NSIndexPath?)?.row {
                     vc.contact = contact
                     vc.contactDetailDelegate = self
                     if row == details.count {
@@ -288,7 +288,7 @@ class ContactViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
         else if segue.identifier == kEditContactSegue {
-            if let vc = segue.destinationViewController as? ContactEditViewController {
+            if let vc = segue.destination as? ContactEditViewController {
                 if let contact = contact {
                     vc.contact = contact
                     vc.updatedContactDelegate = self

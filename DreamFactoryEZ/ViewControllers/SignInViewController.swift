@@ -18,7 +18,7 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var serverLabel: UILabel!
     
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let dataAccess = DataAccess.sharedInstance
     var completionClosure: (()->Void)? = nil
 
     override func viewDidLoad() {
@@ -28,20 +28,20 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
         signInView.layer.cornerRadius = 6
         signInView.layer.masksToBounds = true
         serverLabel.text = kBaseInstanceUrl
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(activityChanged), name: kRESTServerActiveCountUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityChanged), name: NSNotification.Name(rawValue: kRESTServerActiveCountUpdated), object: nil)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         updateViewForSignedInState(dataAccess.isSignedIn())
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     // Could just use UIApplication network, but it is not dramatic enough
-    @objc func activityChanged(notification:NSNotification) {
-        let activityCount = (notification.userInfo?["count"] as? NSNumber)?.longValue ?? 0
+    @objc func activityChanged(_ notification:Notification) {
+        let activityCount = ((notification as NSNotification).userInfo?["count"] as? NSNumber)?.intValue ?? 0
         if activityCount > 0 {
             activityIndicator.startAnimating()
             //UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -52,67 +52,67 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
         }
     }
     
-    func updateViewForSignedInState(bIsSignedIn:Bool) {
+    func updateViewForSignedInState(_ bIsSignedIn:Bool) {
         if bIsSignedIn {
             emailTextField.text = dataAccess.signedInUser()
-            emailTextField.enabled = false
-            emailTextField.backgroundColor = UIColor.grayColor()
+            emailTextField.isEnabled = false
+            emailTextField.backgroundColor = UIColor.gray
             passwordTextField.text = nil
-            passwordTextField.enabled = false
-            passwordTextField.backgroundColor = UIColor.grayColor()
-            signInButton.setTitle("Sign Out", forState: .Normal)
-            registerButton.hidden = true
+            passwordTextField.isEnabled = false
+            passwordTextField.backgroundColor = UIColor.gray
+            signInButton.setTitle("Sign Out", for: UIControlState())
+            registerButton.isHidden = true
         }
         else {
             emailTextField.text = "user1@zcage.com"
-            emailTextField.enabled = true
-            emailTextField.backgroundColor = UIColor.whiteColor()
+            emailTextField.isEnabled = true
+            emailTextField.backgroundColor = UIColor.white
             passwordTextField.text = "password"
-            passwordTextField.enabled = true
-            passwordTextField.backgroundColor = UIColor.whiteColor()
-            signInButton.setTitle("Sign In", forState: .Normal)
-            registerButton.hidden = false
+            passwordTextField.isEnabled = true
+            passwordTextField.backgroundColor = UIColor.white
+            signInButton.setTitle("Sign In", for: UIControlState())
+            registerButton.isHidden = false
         }
     }
 
     @IBAction func registrationAction() {
-        let alert = UIAlertController(title: "Registration", message: "Who are you?", preferredStyle: .Alert)
-        alert.addTextFieldWithConfigurationHandler { (textField) in
+        let alert = UIAlertController(title: "Registration", message: "Who are you?", preferredStyle: .alert)
+        alert.addTextField { (textField) in
             textField.placeholder = "Email"
-            textField.keyboardType = .EmailAddress
+            textField.keyboardType = .emailAddress
         }
-        alert.addTextFieldWithConfigurationHandler { (textField) in
+        alert.addTextField { (textField) in
             textField.placeholder = "Password"
-            textField.secureTextEntry = true
+            textField.isSecureTextEntry = true
         }
-        let regAction = UIAlertAction(title: "Register", style: .Default) { (_) in
+        let regAction = UIAlertAction(title: "Register", style: .default) { (_) in
             let email = (alert.textFields![0] as UITextField).text ?? ""
             let pwd = (alert.textFields![1] as UITextField).text ?? ""
             
             self.registerEmail(email, pwd: pwd)
         }
         alert.addAction(regAction)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
         
     }
-    func registerEmail(email:String, pwd:String) {
+    func registerEmail(_ email:String, pwd:String) {
         dataAccess.registerWithEmail(email, password: pwd, registrationDelegate: self)
     }
     
     // MARK: - RegisterDelegate
     
-    func userIsRegisteredSuccess(bSuccess:Bool, message: String?) {
+    func userIsRegisteredSuccess(_ bSuccess:Bool, message: String?) {
         if bSuccess {
             self.completionClosure?()
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         else {
             let serverMsg = message ?? "Please try again."
             let msg = "Invalid credentials. Please try again. \n[\(serverMsg)]"
-            let alert = UIAlertController(title: "Registration Failed", message: msg, preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Registration Failed", message: msg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            present(alert, animated: true, completion: nil)
             updateViewForSignedInState(false)
         }
     }
@@ -129,16 +129,16 @@ class SignInViewController: UIViewController, SignInDelegate, RegistrationDelega
     
     // MARK: - SignInDelegate
     
-    func userIsSignedInSuccess(bSignedIn: Bool, message: String?) {
+    func userIsSignedInSuccess(_ bSignedIn: Bool, message: String?) {
         if bSignedIn {
             self.completionClosure?()
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         else {
             let msg = message ?? "Please retry."
-            let alert = UIAlertController(title: "Sign In Failed", message: msg, preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Sign In Failed", message: msg, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            present(alert, animated: true, completion: nil)
             updateViewForSignedInState(false)
         }
     }

@@ -20,25 +20,25 @@ typealias SuccessHandler = (Bool, String?)->Void
 typealias RestResultClosure = (RestCallResult) -> Void
 
 enum RestCallResult {
-    case Success(result: JSON?)
-    case Failure(error: NSError)
-    case UnAuthorizedReauthenticate
+    case success(result: JSON?)
+    case failure(error: NSError)
+    case unAuthorizedReauthenticate
     
     var bIsSuccess: Bool {
         switch (self) {
-        case ( .Success(_)): return true
+        case ( .success(_)): return true
         default: return false
         }
     }
     var json: JSON? {
         switch (self) {
-        case (let .Success(result)): return result
+        case (let .success(result)): return result
         default: return nil
         }
     }
     var error: NSError? {
         switch (self) {
-        case (let .Failure(error)): return error
+        case (let .failure(error)): return error
         default: return nil
         }
     }
@@ -46,26 +46,26 @@ enum RestCallResult {
 struct RestCall {
     var url: String
     var method: HTTPMethod
-    var queryParams: JSON?
-    var body: JSON?
+    var queryParams: [String : String]?
+    var body: AnyObject?
 }
 
 enum HTTPMethod: String { case GET, POST, PATCH, DELETE }
 
 class RESTClient {
-    private let kRestRegister = "/user/register"
-    private let kRestSignIn = "/user/session"
-    private let baseInstanceUrl: String
-    private let apiKey: String
-    private var restActiveCallCount = 0
+    fileprivate let kRestRegister = "/user/register"
+    fileprivate let kRestSignIn = "/user/session"
+    fileprivate let baseInstanceUrl: String
+    fileprivate let apiKey: String
+    fileprivate var restActiveCallCount = 0
     
     init(apiKey:String, instanceUrl:String) {
         self.apiKey = apiKey
         self.baseInstanceUrl = instanceUrl
     }
-    private var sessionToken: String? = nil
-    private(set) var sessionEmail: String? = nil
-    private var sessionPwd: String? = nil
+    fileprivate var sessionToken: String? = nil
+    fileprivate(set) var sessionEmail: String? = nil
+    fileprivate var sessionPwd: String? = nil
 
     var isSignedIn: Bool {
         return (sessionToken != nil)
@@ -82,8 +82,8 @@ class RESTClient {
         //sessionPwd = "password" // Valid password
     }
     
-    func registerWithEmail(email:String, password:String, registrationSuccessHandler: SuccessHandler) {
-        let requestData = ["email" : email, "password" : password]
+    func registerWithEmail(_ email:String, password:String, registrationSuccessHandler: @escaping SuccessHandler) {
+        let requestData = ["email" : email, "password" : password] as AnyObject
         
         callRestService(kRestRegister, method: .POST, queryParams: nil, body: requestData) { (callResult) in
             if callResult.bIsSuccess { // If configured for immediate registration, can go ahead and signin.
@@ -95,8 +95,8 @@ class RESTClient {
         }
     }
     
-    func signInWithEmail(email:String, password:String, signInHandler: SuccessHandler) {
-        let requestData = ["email" : email, "password" : password]
+    func signInWithEmail(_ email:String, password:String, signInHandler: @escaping SuccessHandler) {
+        let requestData = ["email" : email, "password" : password] as AnyObject
         
         callRestService(kRestSignIn, method: .POST, queryParams: nil, body: requestData) { (callResult) in
             var bSuccess = false
@@ -108,7 +108,7 @@ class RESTClient {
         }
     }
 
-    func callRestServiceChain(chain: [RestCall], index: Int, resultClosure: RestResultClosure) {
+    func callRestServiceChain(_ chain: [RestCall], index: Int, resultClosure: @escaping RestResultClosure) {
         if index < chain.count {
         let restCall = chain[index]
             callRestService(restCall.url, method: restCall.method, queryParams: restCall.queryParams, body: restCall.body) { restResult in
@@ -127,22 +127,22 @@ class RESTClient {
             }
         }
     }
-    func callRestService(relativePath: String, method:HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?, resultClosure:RestResultClosure) {
+    func callRestService(_ relativePath: String, method:HTTPMethod, queryParams: [String: String]?, body: AnyObject?, resultClosure:@escaping RestResultClosure) {
         
         let path = baseInstanceUrl + relativePath
         
         callCountIncrement(true)
         let request = buildRequest(path, method: method, queryParams: queryParams, body: body)
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        config.HTTPAdditionalHeaders = sessionHeaderParams()
-        let session = NSURLSession(configuration: config)
+        let config = URLSessionConfiguration.default
+        config.httpAdditionalHeaders = sessionHeaderParams()
+        let session = URLSession(configuration: config)
         print("REST(\(method.rawValue))->\(request.pathAndQuery())")
         
-        let task = session.dataTaskWithRequest(request, completionHandler: { data, response, error -> Void in
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             self.callCountIncrement(false)
-            let callResult = self.checkData(data, response: response, error: error)
+            let callResult = self.checkData(data, response: response, error: error as NSError?)
             switch callResult {
-            case .UnAuthorizedReauthenticate:
+            case .unAuthorizedReauthenticate:
                 print("REST:UnAuthorizedReauthenticate")
                 self.signInWithEmail(self.sessionEmail!, password: self.sessionPwd!) { (bSuccess, _) in
                     if bSuccess && self.restActiveCallCount < 20 { // ReAuth worked, try original request again. Prevent endless looping.
@@ -160,7 +160,7 @@ class RESTClient {
     }
     
     // MARK: - Rest Handling
-    private func sessionHeaderParams() -> [String: String] {
+    fileprivate func sessionHeaderParams() -> [String: String] {
         var dict = ["Content-Type" : "application/json",
                     "X-DreamFactory-Api-Key": apiKey]
         if let token = sessionToken {
@@ -169,19 +169,19 @@ class RESTClient {
         return dict
     }
     
-    private func callCountIncrement(bIsEntry:Bool) {
+    fileprivate func callCountIncrement(_ bIsEntry:Bool) {
         synchronizedSelf() {
             restActiveCallCount = max(0, restActiveCallCount + (bIsEntry ? 1 : -1))
             
-            dispatch_async(dispatch_get_main_queue()) {
-                NSNotificationCenter.defaultCenter().postNotificationName(kRESTServerActiveCountUpdated, object: self, userInfo: ["count" : NSNumber.init(long: self.restActiveCallCount)])
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notification.Name(rawValue: kRESTServerActiveCountUpdated), object: self, userInfo: ["count" : NSNumber.init(value: self.restActiveCallCount as Int)])
             }
         }
     }
     
     
     
-    private func setUserDataFromJson(signInJson:JSON?) -> Bool {
+    fileprivate func setUserDataFromJson(_ signInJson:JSON?) -> Bool {
         if let signInJson = signInJson {
             // elements: session_token, email, last_name, role_id, session_id, role, last_login_date, is_sys_admin, host, name, id
             sessionToken = signInJson["session_token"] as? String
@@ -195,12 +195,12 @@ class RESTClient {
         // Could set other data here
         return (sessionToken != nil)
     }
-    private func checkData(data: NSData?, response: NSURLResponse?, error: NSError?) -> RestCallResult {
+    fileprivate func checkData(_ data: Data?, response: URLResponse?, error: NSError?) -> RestCallResult {
         var parsedJSONResults: JSON?
         
         if let data = data {
             do {
-                let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+                let jsonData = try JSONSerialization.jsonObject(with: data, options: [])
                 parsedJSONResults = jsonData as? JSON
             }
             catch {
@@ -210,31 +210,31 @@ class RESTClient {
         
         if let response_error = error {
             let error = NSError(domain: response_error.domain, code: response_error.code, userInfo: parsedJSONResults)
-            return .Failure(error: error)
+            return .failure(error: error)
         }
         else {
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
+            let statusCode = (response as! HTTPURLResponse).statusCode
             if statusCode == 401 && sessionToken != nil && sessionEmail != nil && sessionPwd != nil {
                 sessionToken = nil
-                return .UnAuthorizedReauthenticate
+                return .unAuthorizedReauthenticate
             }
             else if NSLocationInRange(statusCode, NSMakeRange(200, 99)) {
-                return .Success(result: parsedJSONResults)
+                return .success(result: parsedJSONResults)
             }
             else {
                 let error = self.restErrorForStatusCode(statusCode, json: parsedJSONResults)
-                return .Failure(error: error)
+                return .failure(error: error)
             }
         }
     }
     // DreamFactory specific messaging extraction
-    private func restErrorForStatusCode(statusCode: Int, json: JSON?) -> NSError {
+    fileprivate func restErrorForStatusCode(_ statusCode: Int, json: JSON?) -> NSError {
         var userInfo = json
         if let pr = json {
             if let errorDict = pr["error"] {
                 if let errorDict = errorDict as? JSON {
                     if let msg = errorDict["message"] as? String {
-                        userInfo = [NSLocalizedDescriptionKey : msg]
+                        userInfo = [NSLocalizedDescriptionKey : msg as AnyObject]
                     }
                 }
             }
@@ -242,7 +242,7 @@ class RESTClient {
         let error = NSError(domain: "DreamFactoryAPI", code: statusCode, userInfo: userInfo)
         return error
     }
-    private func buildRequest(path: String, method: HTTPMethod, queryParams: [String: AnyObject]?, body: AnyObject?) -> NSURLRequest {
+    fileprivate func buildRequest(_ path: String, method: HTTPMethod, queryParams: [String: String]?, body: AnyObject?) -> URLRequest {
         let request = NSMutableURLRequest()
         var requestUrl = path
         
@@ -252,31 +252,30 @@ class RESTClient {
             requestUrl = "\(path)?\(parameterString)"
         }
         
-        let URL = NSURL(string: requestUrl)!
-        request.URL = URL
+        let URL = Foundation.URL(string: requestUrl)!
+        request.url = URL
         request.timeoutInterval = 30
         
-        request.HTTPMethod = method.rawValue
-        if let body = body {
-            var data: NSData!
-            if body is [String: AnyObject] || body is [AnyObject] {
-                data = try? NSJSONSerialization.dataWithJSONObject(body, options: [])
-            }
+        request.httpMethod = method.rawValue
+        if let body = body,
+            let data = try? JSONSerialization.data(withJSONObject: body, options: []) {
+            
             //else if let body = body as? NIKFile {
             //    data = body.data
             //}
-            else {
-                data = body.dataUsingEncoding(NSUTF8StringEncoding)
-            }
-            let postLength = "\(data.length)"
+            //else {
+            //    data = body.data(using: String.Encoding.utf8)
+            //}
+            
+            let postLength = "\(data.count)"
             request.setValue(postLength, forHTTPHeaderField: "Content-Length")
-            request.HTTPBody = data
+            request.httpBody = data
         }
         
-        return request
+        return request as URLRequest
     }
     // Adapted and simplified from: http://stackoverflow.com/a/34173952/4305146
-    private func synchronizedSelf(@noescape closure: () -> ()) {
+    fileprivate func synchronizedSelf(_ closure: () -> ()) {
         objc_sync_enter(self)
         defer {
             objc_sync_exit(self)

@@ -10,7 +10,7 @@ import UIKit
 
 class ContactEditViewController: UIViewController, ContactUpdateDelegate, ContactDeleteDelegate {
 
-    private let dataAccess = DataAccess.sharedInstance
+    fileprivate let dataAccess = DataAccess.sharedInstance
     var contact:ContactRecord? = nil
     var updatedContactDelegate:ContactUpdateDelegate? = nil
     
@@ -26,21 +26,21 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate, Contac
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveSelected))
-        self.navigationItem.setRightBarButtonItem(rightMenuItem, animated: false);
+        let rightMenuItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveSelected))
+        self.navigationItem.setRightBarButton(rightMenuItem, animated: false);
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if !dataAccess.isSignedIn() || updatedContactDelegate == nil {
-            navigationController?.popToRootViewControllerAnimated(true)
+            _ = navigationController?.popToRootViewController(animated: true)
         }
         else {
             setValuesFromModel()
-            removeContactButton.hidden = contact?.isNew() ?? true
+            removeContactButton.isHidden = contact?.isNew() ?? true
         }
     }
     
-    @objc private func saveSelected() {
+    @objc fileprivate func saveSelected() {
         if let contact = contact {
             let contactRecord = ContactRecord()
             contactRecord.id = contact.id
@@ -57,16 +57,16 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate, Contac
     @IBAction func removeItemAction() {
         if let contact = contact {
             let name = contact.fullName
-            let alert = UIAlertController(title: "Remove Contact", message: "Remove this contact: \(name). Are you sure?", preferredStyle: .Alert)
-            let delAction = UIAlertAction(title: "Remove", style: .Destructive) { (_) in
+            let alert = UIAlertController(title: "Remove Contact", message: "Remove this contact: \(name). Are you sure?", preferredStyle: .alert)
+            let delAction = UIAlertAction(title: "Remove", style: .destructive) { (_) in
                 self.dataAccess.removeContactForId(contact.id, delegate: self)
             }
             alert.addAction(delAction)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
-    private func setValuesFromModel() {
+    fileprivate func setValuesFromModel() {
         if let contact = contact {
             firstNameTextField.text = contact.firstName
             lastNameTextField.text = contact.lastName
@@ -79,29 +79,29 @@ class ContactEditViewController: UIViewController, ContactUpdateDelegate, Contac
     // MARK: ContactUpdateDelegate
     
     // Pass the updated/new contact to the caller (ContactsVC, ContactVC) to handle.
-    func setContact(contact:ContactRecord) {
+    func setContact(_ contact:ContactRecord) {
         if contact.id == -1 { // New -> ContactsVC
-            navigationController?.popViewControllerAnimated(false)
+            _ = navigationController?.popViewController(animated: false)
         }
         else if let ucd = updatedContactDelegate {
             ucd.setContact(contact)
-            navigationController?.popViewControllerAnimated(true)
+            _ = navigationController?.popViewController(animated: true)
         }
     }
     
     // MARK: DataAccessUpdateDelegate
     
     func dataAccessSuccess() {
-        navigationController?.popViewControllerAnimated(true)
+        _ = navigationController?.popViewController(animated: true)
     }
     func contactDeleteSuccess() {
-        navigationController?.popToRootViewControllerAnimated(true)
+        _ = navigationController?.popToRootViewController(animated: true)
     }
-    func dataAccessError(error:NSError?) {
+    func dataAccessError(_ error:NSError?) {
         let serverMsg = error?.localizedDescription ?? "Validation Issue"
         let msg = "Server reported error. Please try again. \n[\(serverMsg)]"
-        let alert = UIAlertController(title: "Save Issue", message: msg, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Save Issue", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
