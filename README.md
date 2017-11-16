@@ -6,6 +6,8 @@
 * In response to a comment about this code I created a while back, I went ahead and created a new demo server
 app at dreamfactory.com and update this project with that API Key and access URL.
 * Updated for Swift 4, Xcode9, iPhoneX
+* Would be great to update JSON handling to use the new JSONEncoder and JSONDecoder. **NOT DONE**
+* (Interestingly, my JSON implementation converted directly to Swift 4. Seems the DreamFactory implemtation has more issues.)
 
 ### Overview
 
