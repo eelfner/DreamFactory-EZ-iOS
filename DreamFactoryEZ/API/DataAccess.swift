@@ -14,8 +14,8 @@
 
 import Foundation
 
-private let kApiKey = "32548c8bf1937459f438324d5f5f7653a633c421b9b6fc057a588549d9b66233"
-let kBaseInstanceUrl = "https://ft-eje.vz2.dreamfactory.com/api/v2"
+private let kApiKey = "8047af4ebcc748e5cb49db3bc75349d2f798151468feb28ed70eab943567a6b2"
+let kBaseInstanceUrl = "https://ft-ericdf.oraclecloud2.dreamfactory.com/api/v2"
 private let kRestContact = "/db/_table/contact"
 private let kRestContactGroupRelationship = "/db/_table/contact_group_relationship"
 private let kRestGroup = "/db/_table/contact_group"
