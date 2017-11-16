@@ -1,5 +1,13 @@
 ## DreamFactoryEZ
 
+## Notes: 2017-11-16
+
+* The DreamFactory Admin Panel **HAS SOME ISSUES WITH SAFARI BROWSER - DISTURBING!**.
+* In response to a comment about this code I created a while back, I went ahead and created a new demo server
+app at dreamfactory.com and update this project with that API Key and access URL.
+
+###Overview
+
 This project is primarily a rewrite of the [iOS Sample app](https://github.com/dreamfactorysoftware/ios-swift-sdk) 
 for DreamFactory. While that app has some nice features, it is outdated and not complete, and 
 seems to have some issues. It also does not seem very standard. 
