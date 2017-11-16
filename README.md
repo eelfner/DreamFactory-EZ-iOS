@@ -5,6 +5,7 @@
 * The DreamFactory Admin Panel **HAS SOME ISSUES WITH SAFARI BROWSER - DISTURBING!**.
 * In response to a comment about this code I created a while back, I went ahead and created a new demo server
 app at dreamfactory.com and update this project with that API Key and access URL.
+* Updated for Swift 4, Xcode9, iPhoneX
 
 ### Overview
 
@@ -47,7 +48,7 @@ once I see or hear of any abuse.
  - Display, flow, presentation completely changed.
  - Internal design somewhat similar, but more clear boundaries between UI, App, and Server
  logic.
- - Updated for Swift 2.2 and all deprecated methods removed.
+ - Updated for Swift 4 and all deprecated methods removed.
   
 ### Possible Enhancements
 
