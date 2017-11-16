@@ -31,7 +31,7 @@ class ContactDetailRecord: CustomStringConvertible {
         if country != "" {d += country + "\n" }
         
         if d.hasSuffix("\n") {
-            d = d.substring(to: d.characters.index(before: d.endIndex))
+            d = String(d.dropLast())
         }
         return d
     }

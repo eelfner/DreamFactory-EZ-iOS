@@ -103,7 +103,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         if segue.identifier == kSignInSegue {
             if let vc = segue.destination as? SignInViewController {
-                vc.completionClosure = { _ in
+                vc.completionClosure = { ()->Void in
                     self.reloadContactsForGroup(self.currentGroup)
                 }
             }
@@ -151,7 +151,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
 
         for contact in contacts {
             let name = contact.fullName
-            let firstChar = name.substring(to: name.characters.index(name.startIndex, offsetBy: 1, limitedBy: name.endIndex)!)
+            let firstChar = String(name.prefix(1))
             if contactsBySection.keys.contains(firstChar) {
                 contactsBySection[firstChar]!.append(contact)
             }
